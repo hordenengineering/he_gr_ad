@@ -35,6 +35,7 @@
 namespace gr {
   namespace fec {
     namespace code {
+      static BOOST_CONSTEXPR_OR_CONST float D_LLR_FACTOR = -2.19722458f;
 
       /*!
        * \brief Class holds common methods and attributes for different
@@ -68,7 +69,6 @@ namespace gr {
         bool set_frame_size(unsigned int frame_size){return false;};
 
       private:
-        static BOOST_CONSTEXPR_OR_CONST float D_LLR_FACTOR = -2.19722458f;
         unsigned int d_frozen_bit_counter;
 
       protected:
