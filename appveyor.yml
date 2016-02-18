@@ -1,0 +1,98 @@
+clone_depth: 1
+
+nuget:
+    account_feed: true
+    project_feed: true
+
+install:
+    - cd c:\
+
+    # Install VOLK
+    - nuget install volk
+
+    # Install Boost libraries
+    - appveyor-retry nuget install boost_system-vc120
+    - appveyor-retry nuget install boost_filesystem-vc120
+    - appveyor-retry nuget install boost_chrono-vc120
+    - appveyor-retry nuget install boost_date_time-vc120
+    - appveyor-retry nuget install boost_program_options-vc120
+    - appveyor-retry nuget install boost_unit_test_framework-vc120
+    - appveyor-retry nuget install boost_thread-vc120
+    - appveyor-retry nuget install boost_regex-vc120
+
+    # Install SWIG
+    - appveyor DownloadFile https://sourceforge.net/projects/swig/files/swigwin/swigwin-3.0.8/swigwin-3.0.8.zip
+    - 7z x swigwin-3.0.8.zip
+
+    # Install libfftw3
+    - mkdir c:\fftw3
+    - cd c:\fftw3
+    - appveyor DownloadFile ftp://ftp.fftw.org/pub/fftw/fftw-3.3.4-dll64.zip
+    - 7z x fftw-3.3.4-dll64.zip
+    - set PATH=%PATH%;C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin
+    - lib.exe /machine:x64 /def:libfftw3f-3.def
+
+build_script:
+    - mkdir c:\projects\gnuradio\build
+    - cd c:\projects\gnuradio\build
+
+    # Without this directory in the %PATH%, compiler tests fail because of missing DLLs
+    - set PATH=%PATH%;C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin
+    - cmake -G "Visual Studio 12 Win64" \
+        -DBoost_CHRONO_LIBRARY_RELEASE:FILEPATH=c:/boost_chrono-vc120.1.59.0.0/lib/native/address-model-64/lib/boost_chrono-vc120-mt-1_59.lib \
+        -DBoost_FILESYSTEM_LIBRARY_RELEASE:FILEPATH=c:/boost_filesystem-vc120.1.59.0.0/lib/native/address-model-64/lib/boost_filesystem-vc120-mt-1_59.lib \
+        -DBoost_PROGRAM_OPTIONS_LIBRARY_RELEASE:FILEPATH=c:/boost_program_options-vc120.1.59.0.0/lib/native/address-model-64/lib/boost_program_options-vc120-mt-1_59.lib \
+        -DBoost_SYSTEM_LIBRARY_RELEASE:FILEPATH=c:/boost_system-vc120.1.59.0.0/lib/native/address-model-64/lib/boost_system-vc120-mt-1_59.lib \
+        -DBoost_DATE_TIME_LIBRARY_RELEASE:FILEPATH=c:/boost_date_time-vc120.1.59.0.0/lib/native/address-model-64/lib/boost_date_time-vc120-mt-1_59.lib \
+        -DBoost_THREAD_LIBRARY_RELEASE:FILEPATH=c:/boost_thread-vc120.1.59.0.0/lib/native/address-model-64/lib/boost_thread-vc120-mt-1_59.lib \
+        -DBoost_REGEX_LIBRARY_RELEASE:FILEPATH=c:/boost_regex-vc120.1.59.0.0/lib/native/address-model-64/lib/boost_regex-vc120-mt-1_59.lib \
+        -DBoost_UNIT_TEST_FRAMEWORK_LIBRARY_RELEASE:FILEPATH=c:/boost_unit_test_framework-vc120.1.59.0.0/lib/native/address-model-64/lib/boost_unit_test_framework-vc120-mt-1_59.lib \
+        -DBoost_INCLUDE_DIR:PATH=c:/boost.1.59.0.0/lib/native/include \
+        -DCMAKE_BUILD_TYPE:STRING=Release -DENABLE_INTERNAL_VOLK:BOOL=OFF \
+        -DVOLK_INCLUDE_DIRS:PATH=c:/volk.1.0.0/include \
+        -DVOLK_LIBRARIES:FILEPATH=c:/volk.1.0.0/lib/volk.lib \
+        -DFFTW3F_INCLUDE_DIRS:PATH=c:/fftw3 \
+        -DFFTW3F_LIBRARIES:PATH=c:/fftw3/libfftw3f-3.lib \
+        -DENABLE_GR_VOCODER:BOOL=OFF \
+        -DSWIG_EXECUTABLE:FILEPATH=c:/swigwin-3.0.8/swig.exe \
+        ..
+
+    - msbuild /m /p:Configuration=Release /p:Platform="x64" gnuradio.sln
+
+    # Prepare an archive
+    - mkdir c:\gnuradio\lib\
+    - mkdir c:\gnuradio\bin\
+
+    # Copy GNU Radio libraries
+    - copy gnuradio-runtime\lib\Release\gnuradio-runtime.* c:\gnuradio\lib\
+    - copy gnuradio-runtime\lib\pmt\Release\gnuradio-pmt.* c:\gnuradio\lib\
+    - copy gr-audio\lib\Release\gnuradio-audio.* c:\gnuradio\lib\
+    - copy gr-blocks\lib\Release\gnuradio-blocks.* c:\gnuradio\lib\
+    - copy gr-ctrlport\lib\Release\gnuradio-ctrlport.* c:\gnuradio\lib\
+    - copy gr-fcd\lib\Release\gnuradio-fcd.* c:\gnuradio\lib\
+    - copy gr-fec\lib\Release\gnuradio-fec.* c:\gnuradio\lib\
+    - copy gr-noaa\lib\Release\gnuradio-noaa.* c:\gnuradio\lib\
+    - copy gr-fft\lib\Release\gnuradio-fft.* c:\gnuradio\lib\
+    - copy gr-filter\lib\Release\gnuradio-filter.* c:\gnuradio\lib\
+    - copy gr-analog\lib\Release\gnuradio-analog.* c:\gnuradio\lib\
+    - copy gr-digital\lib\Release\gnuradio-digital.* c:\gnuradio\lib\
+    - copy gr-channels\lib\Release\gnuradio-channels.* c:\gnuradio\lib\
+    - copy gr-pager\lib\Release\gnuradio-pager.* c:\gnuradio\lib\
+    - copy gr-trellis\lib\Release\gnuradio-trellis.* c:\gnuradio\lib\
+    - copy gr-utils\lib\Release\gnuradio-utils.* c:\gnuradio\lib\
+
+    - move c:\gnuradio\lib\*.dll c:\gnuradio\bin\
+    - copy c:\boost_chrono-vc120.1.59.0.0\lib\native\address-model-64\lib\boost_chrono-vc120-mt-1_59.dll c:\gnuradio\bin\
+    - copy c:\boost_filesystem-vc120.1.59.0.0\lib\native\address-model-64\lib\boost_filesystem-vc120-mt-1_59.dll c:\gnuradio\bin\
+    - copy c:\boost_program_options-vc120.1.59.0.0\lib\native\address-model-64\lib\boost_program_options-vc120-mt-1_59.dll c:\gnuradio\bin\
+    - copy c:\boost_system-vc120.1.59.0.0\lib\native\address-model-64\lib\boost_system-vc120-mt-1_59.dll c:\gnuradio\bin\
+    - copy c:\boost_date_time-vc120.1.59.0.0\lib\native\address-model-64\lib\boost_date_time-vc120-mt-1_59.dll c:\gnuradio\bin\
+    - copy c:\boost_thread-vc120.1.59.0.0\lib\native\address-model-64\lib\boost_thread-vc120-mt-1_59.dll c:\gnuradio\bin\
+    - copy c:\boost_regex-vc120.1.59.0.0\lib\native\address-model-64\lib\boost_regex-vc120-mt-1_59.dll c:\gnuradio\bin\
+    - copy c:\boost_unit_test_framework-vc120.1.59.0.0\lib\native\address-model-64\lib\boost_unit_test_framework-vc120-mt-1_59.dll c:\gnuradio\bin\
+    - copy c:\fftw3\libfftw3f-3.dll c:\gnuradio\bin\
+
+    # Create an archive
+    - cd c:\
+    - 7z a "c:\gnuradio-x64.zip" gnuradio
+    - appveyor PushArtifact c:\gnuradio-x64.zip
