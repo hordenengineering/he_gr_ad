@@ -58,6 +58,7 @@ build_script:
         ..
 
     - msbuild /m /p:Configuration=Release /p:Platform="x64" gnuradio.sln
+    - msbuild /m /p:Configuration=Release /p:Platform="x64" /target:INSTALL gnuradio.sln
 
     # Prepare an archive
     - mkdir c:\gnuradio\lib\
