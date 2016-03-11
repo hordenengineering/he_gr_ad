@@ -72,6 +72,7 @@ function(GR_MODULE EXTVAR PCNAME INCFILE LIBFILE)
             ${CMAKE_INSTALL_PREFIX}/include
         PATHS /usr/local/include
               /usr/include
+              "c:/Program Files/gnuradio/include"
     )
 
     # look for libs
@@ -87,6 +88,7 @@ function(GR_MODULE EXTVAR PCNAME INCFILE LIBFILE)
                   /usr/local/lib64
                   /usr/lib
                   /usr/lib64
+                  "c:/Program Files/gnuradio/lib"
         )
 	list(APPEND ${LIBVAR_NAME} ${${LIBVAR_NAME}_${libname}})
     endforeach(libname)
