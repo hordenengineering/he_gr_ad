@@ -64,3 +64,18 @@ build_script:
     - cd "c:\Program Files"
     - 7z a "c:\gnuradio-x64.zip" gnuradio
     - appveyor PushArtifact c:\gnuradio-x64.zip
+
+    # Create a deps archive
+    - cd c:\
+    - mkdir c:\deps
+    - copy /B c:\boost_atomic-vc120.1.61.0.0\lib\native\address-model-64\lib\boost_atomic-vc120-mt-1_61.* c:\deps\
+    - copy /B c:\boost_chrono-vc120.1.61.0.0\lib\native\address-model-64\lib\boost_chrono-vc120-mt-1_61.* c:\deps\
+    - copy /B c:\boost_filesystem-vc120.1.61.0.0\lib\native\address-model-64\lib\boost_filesystem-vc120-mt-1_61.* c:\deps\
+    - copy /B c:\boost_program_options-vc120.1.61.0.0\lib\native\address-model-64\lib\boost_program_options-vc120-mt-1_61.* c:\deps\
+    - copy /B c:\boost_system-vc120.1.61.0.0\lib\native\address-model-64\lib\boost_system-vc120-mt-1_61.* c:\deps\
+    - copy /B c:\boost_date_time-vc120.1.61.0.0\lib\native\address-model-64\lib\boost_date_time-vc120-mt-1_61.* c:\deps\
+    - copy /B c:\boost_thread-vc120.1.61.0.0\lib\native\address-model-64\lib\boost_thread-vc120-mt-1_61.* c:\deps\
+    - copy /B c:\boost_regex-vc120.1.61.0.0\lib\native\address-model-64\lib\boost_regex-vc120-mt-1_61.* c:\deps\
+    - copy /B c:\boost_unit_test_framework-vc120.1.61.0.0\lib\native\address-model-64\lib\boost_unit_test_framework-vc120-mt-1_61.* c:\deps\
+    - 7z a "c:\gnuradio-deps.zip" deps
+    - appveyor PushArtifact c:\gnuradio-deps.zip
