@@ -22,7 +22,7 @@ install:
 
     # Install libvolk
     - cd "c:\Program Files"
-    - appveyor DownloadFile https://ci.appveyor.com/api/projects/analogdevicesinc/volk/artifacts/libvolk-x64.zip
+    - appveyor DownloadFile https://ci.appveyor.com/api/projects/analogdevicesinc/volk/artifacts/libvolk-x64.zip?branch=boost_no_static
     - 7z x libvolk-x64.zip > nul
 
     # Install libfftw3
