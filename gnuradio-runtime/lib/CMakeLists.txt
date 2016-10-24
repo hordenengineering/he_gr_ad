@@ -56,6 +56,7 @@ include_directories(${GNURADIO_RUNTIME_INCLUDE_DIRS}
 		    ${CMAKE_CURRENT_BINARY_DIR}/../include/
 		    ${VOLK_INCLUDE_DIRS}
                     ${Boost_INCLUDE_DIRS}
+                    ${LOG4CPP_INCLUDE_DIRS}
 )
 
 if(ENABLE_CTRLPORT_THRIFT)
