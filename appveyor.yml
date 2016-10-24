@@ -35,7 +35,8 @@ install:
     - lib.exe /machine:x64 /def:libfftw3f-3.def
 
     # Install log4cpp
-    - cd c:\
+    - mkdir c:\log4cpp
+    - cd c:\log4cpp
     - appveyor DownloadFile http://swdownloads.analog.com/cse/build/log4cpp.zip
     - 7z x log4cpp.zip > nul
 
