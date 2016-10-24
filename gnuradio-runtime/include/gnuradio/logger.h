@@ -29,9 +29,7 @@
 *
 */
 
-#ifdef _MSC_VER
-typedef unsigned short mode_t;
-#else
+#ifndef _MSC_VER
 #include <sys/types.h>
 #endif
 
