@@ -28,7 +28,8 @@ install:
     # Install libfftw3
     - mkdir c:\fftw3
     - cd c:\fftw3
-    - appveyor DownloadFile ftp://ftp.fftw.org/pub/fftw/fftw-3.3.4-dll64.zip
+    - curl -fsS -o fftw-3.3.4-dll64.zip ftp://ftp.fftw.org/pub/fftw/fftw-3.3.4-dll64.zip
+#    - appveyor DownloadFile ftp://ftp.fftw.org/pub/fftw/fftw-3.3.4-dll64.zip
     - 7z x fftw-3.3.4-dll64.zip
     - set PATH=%PATH%;C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin
     - lib.exe /machine:x64 /def:libfftw3f-3.def
