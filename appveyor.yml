@@ -34,6 +34,11 @@ install:
     - set PATH=%PATH%;C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin
     - lib.exe /machine:x64 /def:libfftw3f-3.def
 
+    # Install log4cpp
+    - cd c:\
+    - appveyor DownloadFile http://swdownloads.analog.com/cse/build/log4cpp.zip
+    - 7z x log4cpp.zip > nul
+
 build_script:
     - mkdir c:\projects\gnuradio\build
     - cd c:\projects\gnuradio\build
@@ -57,6 +62,8 @@ build_script:
         -DFFTW3F_LIBRARIES:PATH=c:/fftw3/libfftw3f-3.lib \
         -DENABLE_GR_VOCODER:BOOL=OFF -DENABLE_GR_DTV:BOOL=OFF \
         -DSWIG_EXECUTABLE:FILEPATH=c:/swigwin-3.0.8/swig.exe \
+        -DLOG4CPP_INCLUDE_DIR:PATH=c:/log4cpp/include \
+        -DLOG4CPP_LIBRARY:FILEPATH=c:/log4cpp/lib/log4cpp.lib \
         ..
 
     - cmake --build . --config Release --target INSTALL
