@@ -65,6 +65,7 @@ build_script:
         -DSWIG_EXECUTABLE:FILEPATH=c:/swigwin-3.0.8/swig.exe \
         -DLOG4CPP_INCLUDE_DIR:PATH=c:/log4cpp/include \
         -DLOG4CPP_LIBRARY:FILEPATH=c:/log4cpp/lib/log4cpp.lib \
+        -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON \
         ..
 
     - cmake --build . --config Release --target INSTALL
