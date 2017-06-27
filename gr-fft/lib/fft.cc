@@ -26,7 +26,7 @@
 #include <volk/volk.h>
 #include <fftw3.h>
 
-#ifdef _MSC_VER //http://www.fftw.org/install/windows.html#DLLwisdom
+#ifdef _WIN32 //http://www.fftw.org/install/windows.html#DLLwisdom
 static void my_fftw_write_char(char c, void *f) { fputc(c, (FILE *) f); }
 #define fftw_export_wisdom_to_file(f) fftw_export_wisdom(my_fftw_write_char, (void*) (f))
 #define fftwf_export_wisdom_to_file(f) fftwf_export_wisdom(my_fftw_write_char, (void*) (f))
@@ -36,7 +36,7 @@ static int my_fftw_read_char(void *f) { return fgetc((FILE *) f); }
 #define fftw_import_wisdom_from_file(f) fftw_import_wisdom(my_fftw_read_char, (void*) (f))
 #define fftwf_import_wisdom_from_file(f) fftwf_import_wisdom(my_fftw_read_char, (void*) (f))
 #define fftwl_import_wisdom_from_file(f) fftwl_import_wisdom(my_fftw_read_char, (void*) (f))
-#endif //_MSC_VER
+#endif //_WIN32
 
 #include <stdlib.h>
 #include <string.h>
