@@ -154,6 +154,9 @@ macro(GR_SWIG_MAKE name)
     list(INSERT GR_SWIG_INCLUDE_DIRS 0 ${CMAKE_CURRENT_SOURCE_DIR})
     list(INSERT GR_SWIG_INCLUDE_DIRS 0 ${CMAKE_CURRENT_BINARY_DIR})
 
+    #remove duplicates
+    list(REMOVE_DUPLICATES GR_SWIG_INCLUDE_DIRS)
+
     #determine include dependencies for swig file
     execute_process(
         COMMAND ${PYTHON_EXECUTABLE}
