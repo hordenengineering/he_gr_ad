@@ -62,6 +62,11 @@ namespace gr {
       virtual double amplitude() const = 0;
       virtual @TYPE@ offset() const = 0;
       virtual double phase() const = 0;
+      virtual double rise() const = 0;
+      virtual double fall() const = 0;
+      virtual double holdhigh() const = 0;
+      virtual double holdlow() const = 0;
+
 
       virtual void set_sampling_freq(double sampling_freq) = 0;
       virtual void set_waveform(gr::analog::gr_waveform_t waveform) = 0;
@@ -69,6 +74,7 @@ namespace gr {
       virtual void set_amplitude(double ampl) = 0;
       virtual void set_offset(@TYPE@ offset) = 0;
       virtual void set_phase(double phase) = 0;
+      virtual void set_tra_params(double rise, double holdhigh, double fall, double holdlow) = 0;
     };
 
   } /* namespace analog */

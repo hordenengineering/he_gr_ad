@@ -42,6 +42,11 @@ namespace gr {
       @TYPE@		d_offset;
       gr::fxpt_nco	d_nco;
       double            d_phase;
+      double            d_rise;
+      double            d_fall;
+      double            d_holdhigh;
+      double            d_holdlow;
+      double            d_sum;
 
     public:
       @IMPL_NAME@(double sampling_freq, gr_waveform_t waveform,
@@ -58,6 +63,10 @@ namespace gr {
       double amplitude() const { return d_ampl; }
       @TYPE@ offset() const { return d_offset; }
       double phase() const { return d_phase; }
+      double rise() const { return d_rise; }
+      double fall() const { return d_fall; }
+      double holdhigh() const { return d_holdhigh; }
+      double holdlow() const { return d_holdlow; }
 
       void set_sampling_freq(double sampling_freq);
       void set_waveform(gr_waveform_t waveform);
@@ -66,6 +75,11 @@ namespace gr {
       void set_amplitude(double ampl);
       void set_offset(@TYPE@ offset);
       void set_phase(double phase);
+      void set_tra_params(double rise, double holdhigh, double fall, double holdlow);
+      void set_rise(double rise);
+      void set_fall(double fall);
+      void set_holdhigh(double holdhigh);
+      void set_holdlow(double holdlow);
     };
 
   } /* namespace analog */
