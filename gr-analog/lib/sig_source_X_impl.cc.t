@@ -50,7 +50,7 @@ namespace gr {
 		    io_signature::make(0, 0, 0),
 		    io_signature::make(1, 1, sizeof(@TYPE@))),
       d_sampling_freq(sampling_freq), d_waveform(waveform),
-      d_frequency(frequency), d_ampl(ampl), d_offset(offset), d_phase(phase)
+      d_frequency(frequency), d_ampl(ampl), d_offset(offset), d_phase(phase), d_rise(0.5), d_fall(0.5)
     {
       set_frequency(frequency);
       set_phase(phase);
@@ -100,6 +100,11 @@ namespace gr {
     {
       @TYPE@ *optr = (@TYPE@*)output_items[0];
       @TYPE@ t;
+      double rise_as_phase;
+      double holdhigh_as_phase;
+      double fall_as_phase;
+      double sum;
+      double Q,I;
 
       switch(d_waveform) {
 
@@ -181,6 +186,41 @@ namespace gr {
 	}
 	break;
 
+    case GR_TRA_WAVE:
+       sum = d_rise + d_fall + d_holdhigh + d_holdlow;
+       rise_as_phase = ((d_rise  / sum)* 2*M_PI);
+       holdhigh_as_phase = (((d_rise+d_holdhigh)/sum * 2*M_PI));
+       fall_as_phase = (((d_rise+d_holdhigh+d_fall)/sum)* 2*M_PI);
+       for(int i=0;i<noutput_items;i++) {
+	 double osc_phase = d_nco.get_phase()+M_PI;
+         if (osc_phase < rise_as_phase)
+            Q = static_cast<double>(1*(osc_phase/rise_as_phase)*2*d_ampl - d_ampl);
+         else if(osc_phase < holdhigh_as_phase)
+            Q = static_cast<double>(1*d_ampl);
+         else if(osc_phase < fall_as_phase) {
+            double phase = fall_as_phase - holdhigh_as_phase;
+            double rel_phase = osc_phase - holdhigh_as_phase;
+            Q = static_cast<double>(-1*(rel_phase/phase)*2*d_ampl + d_ampl); }
+         else
+            Q = static_cast<double>(-1*d_ampl);
+
+	 double imag_osc_phase = d_nco.get_phase()+3*M_PI/2;
+	 imag_osc_phase = imag_osc_phase - (short)(osc_phase / 2*M_PI);
+         if (osc_phase < rise_as_phase)
+            I = static_cast<double>(1*(imag_osc_phase/rise_as_phase)*2*d_ampl - d_ampl);
+         else if(imag_osc_phase < holdhigh_as_phase)
+            I = static_cast<double>(1*d_ampl);
+         else if(imag_osc_phase < fall_as_phase) {
+            double phase = fall_as_phase - holdhigh_as_phase;
+            double rel_phase = imag_osc_phase - holdhigh_as_phase;
+            I = static_cast<double>(-1*(rel_phase/phase)*2*d_ampl + d_ampl); }
+         else
+            I = static_cast<double>(-1*d_ampl);
+         optr[i] = gr_complex(Q,I) + d_offset;
+         d_nco.step();
+        }
+	break;
+
 #else			// nope...
 
       case GR_CONST_WAVE:
@@ -242,6 +282,29 @@ namespace gr {
 	}
 	break;
 
+     case GR_TRA_WAVE:
+       sum = d_rise + d_fall + d_holdhigh + d_holdlow;
+       rise_as_phase = ((d_rise  / sum)* 2*M_PI);
+       holdhigh_as_phase = (((d_rise+d_holdhigh)/sum * 2*M_PI));
+       fall_as_phase = (((d_rise+d_holdhigh+d_fall)/sum)* 2*M_PI);
+       for(int i=0;i<noutput_items;i++) {
+	 double osc_phase = d_nco.get_phase()+M_PI;
+         if (osc_phase < rise_as_phase)
+            t = static_cast<@TYPE@>(1*(osc_phase/rise_as_phase)*2*d_ampl - d_ampl);
+         else if(osc_phase < holdhigh_as_phase)
+            t = static_cast<@TYPE@>(1*d_ampl);
+         else if(osc_phase < fall_as_phase) {
+            double phase = fall_as_phase - holdhigh_as_phase;
+            double rel_phase = osc_phase - holdhigh_as_phase;
+            t = static_cast<@TYPE@>(-1*(rel_phase/phase)*2*d_ampl + d_ampl); }
+         else
+            t = static_cast<@TYPE@>(-1*d_ampl);
+         optr[i] = t + d_offset;
+         d_nco.step();
+       }
+       break;
+
+
 #endif
 
       default:
@@ -288,6 +351,41 @@ namespace gr {
     @NAME@::set_offset(@TYPE@ offset)
     {
       d_offset = offset;
+    }
+
+    void
+    @NAME@::set_rise(double rise)
+    {
+      d_rise = rise;
+    }
+
+    void
+    @NAME@::set_fall(double fall)
+    {
+      d_fall = fall;
+    }
+
+    void
+    @NAME@::set_holdhigh(double holdhigh)
+    {
+      d_holdhigh = holdhigh;
+    }
+
+    void
+    @NAME@::set_holdlow(double holdlow)
+    {
+      d_holdlow = holdlow;
+    }
+
+    void
+    @NAME@::set_tra_params(double rise, double holdhigh, double fall, double holdlow)
+    {
+      if(rise + holdhigh + fall + holdlow < 0)
+        return;
+      d_rise = rise;
+      d_fall = fall;
+      d_holdhigh = holdhigh;
+      d_holdlow = holdlow;
     }
 
   } /* namespace analog */
