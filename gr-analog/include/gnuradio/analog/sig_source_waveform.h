@@ -36,7 +36,8 @@ namespace gr {
       GR_COS_WAVE,
       GR_SQR_WAVE,
       GR_TRI_WAVE,
-      GR_SAW_WAVE
+      GR_SAW_WAVE,
+      GR_TRA_WAVE
     } gr_waveform_t;
 
   } /* namespace analog */
