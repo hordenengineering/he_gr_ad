@@ -117,7 +117,8 @@ list(APPEND filter_libs
 )
 
 
-add_library(gnuradio-filter SHARED ${filter_sources})
+set(BUILD_SHARED_LIBS ON CACHE BOOL "Build shared libraries")
+add_library(gnuradio-filter ${filter_sources})
 target_link_libraries(gnuradio-filter ${filter_libs})
 GR_LIBRARY_FOO(gnuradio-filter RUNTIME_COMPONENT "filter_runtime" DEVEL_COMPONENT "filter_devel")
 add_dependencies(gnuradio-filter

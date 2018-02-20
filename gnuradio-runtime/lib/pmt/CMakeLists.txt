@@ -105,7 +105,8 @@ if(MSVC)
 endif(MSVC)
 
 
-add_library(gnuradio-pmt SHARED ${pmt_sources})
+set(BUILD_SHARED_LIBS ON CACHE BOOL "Build shared libraries")
+add_library(gnuradio-pmt ${pmt_sources})
 target_link_libraries(gnuradio-pmt ${gnuradio_pmt_libs})
 
 GR_LIBRARY_FOO(gnuradio-pmt RUNTIME_COMPONENT "runtime_runtime" DEVEL_COMPONENT "runtime_devel")

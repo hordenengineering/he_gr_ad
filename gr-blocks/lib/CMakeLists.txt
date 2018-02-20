@@ -254,7 +254,8 @@ list(APPEND blocks_libs
     ${Boost_LIBRARIES}
 )
 
-add_library(gnuradio-blocks SHARED ${gr_blocks_sources})
+set(BUILD_SHARED_LIBS ON CACHE BOOL "Build shared libraries")
+add_library(gnuradio-blocks ${gr_blocks_sources})
 add_dependencies(gnuradio-blocks blocks_generated_includes)
 
 target_link_libraries(gnuradio-blocks ${blocks_libs})

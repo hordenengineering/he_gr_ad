@@ -196,7 +196,8 @@ endif(TRY_SHM_VMCIRCBUF)
 #######################################################
 # SHARED LIB BUILD
 #######################################################
-add_library(gnuradio-runtime SHARED ${gnuradio_runtime_sources})
+set(BUILD_SHARED_LIBS ON CACHE BOOL "Build shared libraries")
+add_library(gnuradio-runtime ${gnuradio_runtime_sources})
 target_link_libraries(gnuradio-runtime ${gnuradio_runtime_libs})
 GR_LIBRARY_FOO(gnuradio-runtime RUNTIME_COMPONENT "runtime_runtime" DEVEL_COMPONENT "runtime_devel")
 

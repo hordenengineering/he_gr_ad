@@ -104,7 +104,8 @@ list(APPEND analog_libs
     ${Boost_LIBRARIES}
 )
 
-add_library(gnuradio-analog SHARED ${analog_sources})
+set(BUILD_SHARED_LIBS ON CACHE BOOL "Build shared libraries")
+add_library(gnuradio-analog ${analog_sources})
 target_link_libraries(gnuradio-analog ${analog_libs})
 GR_LIBRARY_FOO(gnuradio-analog RUNTIME_COMPONENT "analog_runtime" DEVEL_COMPONENT "analog_devel")
 add_dependencies(gnuradio-analog analog_generated_includes analog_generated_swigs gnuradio-filter)
