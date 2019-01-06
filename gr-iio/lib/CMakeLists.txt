@@ -1,0 +1,56 @@
+# Copyright 2011,2012 Free Software Foundation, Inc.
+#
+# This file is part of GNU Radio
+#
+# GNU Radio is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3, or (at your option)
+# any later version.
+#
+# GNU Radio is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with GNU Radio; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 51 Franklin Street,
+# Boston, MA 02110-1301, USA.
+
+########################################################################
+# Setup library
+########################################################################
+include_directories(${CMAKE_CURRENT_BINARY_DIR} ${GR_IIO_INCLUDE_DIRS} ${GNURADIO_RUNTIME_INCLUDE_DIRS}
+	${Boost_INCLUDE_DIR} ${IIO_INCLUDE_DIRS} ${AD9361_INCLUDE_DIRS})
+link_directories(${Boost_LIBRARY_DIRS})
+
+list(APPEND iio_sources
+  device_source_impl.cc
+  device_sink_impl.cc
+  fmcomms2_source_impl.cc
+  fmcomms2_sink_impl.cc
+  fmcomms5_source_impl.cc
+  fmcomms5_sink_impl.cc
+  pluto_source_impl.cc
+  pluto_sink_impl.cc
+  attr_source_impl.cc
+  attr_sink_impl.cc
+)
+
+set(iio_sources "${iio_sources}" PARENT_SCOPE)
+if(NOT iio_sources)
+	MESSAGE(STATUS "No C++ sources... skipping lib/")
+	return()
+endif(NOT iio_sources)
+
+list(APPEND iio_libs
+  gnuradio-runtime
+  ${Boost_LIBRARIES}
+  ${IIO_LIBRARIES}
+  ${AD9361_LIBRARIES}
+  ${GNURADIO_ALL_LIBRARIES})
+
+add_library(gnuradio-iio SHARED ${iio_sources})
+target_link_libraries(gnuradio-iio ${iio_libs})
+
+GR_LIBRARY_FOO(gnuradio-iio)
