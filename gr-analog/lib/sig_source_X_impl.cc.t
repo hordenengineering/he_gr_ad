@@ -192,7 +192,8 @@ namespace gr {
        holdhigh_as_phase = (((d_rise+d_holdhigh)/sum * 2*M_PI));
        fall_as_phase = (((d_rise+d_holdhigh+d_fall)/sum)* 2*M_PI);
        for(int i=0;i<noutput_items;i++) {
-	 double osc_phase = d_nco.get_phase()+M_PI;
+	double osc_phase = d_nco.get_phase()+M_PI;
+	osc_phase = (osc_phase > 0) ? osc_phase : 0;
          if (osc_phase < rise_as_phase)
             Q = static_cast<double>(1*(osc_phase/rise_as_phase)*2*d_ampl - d_ampl);
          else if(osc_phase < holdhigh_as_phase)
@@ -289,6 +290,7 @@ namespace gr {
        fall_as_phase = (((d_rise+d_holdhigh+d_fall)/sum)* 2*M_PI);
        for(int i=0;i<noutput_items;i++) {
 	 double osc_phase = d_nco.get_phase()+M_PI;
+	osc_phase = (osc_phase > 0) ? osc_phase : 0;
          if (osc_phase < rise_as_phase)
             t = static_cast<@TYPE@>(1*(osc_phase/rise_as_phase)*2*d_ampl - d_ampl);
          else if(osc_phase < holdhigh_as_phase)
