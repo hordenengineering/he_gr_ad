@@ -44,9 +44,11 @@ namespace gr {
 
       void  set_freq(float freq);
       void  set_rate(int rate);
+      void  set_len(int len);
 
       float freq() { return d_freq; }
       int   rate() { return d_rate; }
+      int   len()  { return d_len; }
 
       int work(int noutput_items,
 	       gr_vector_const_void_star &input_items,

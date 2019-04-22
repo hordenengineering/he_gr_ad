@@ -65,6 +65,14 @@ namespace gr {
       d_goertzel.set_params(d_rate, d_len, d_freq);
     }
 
+    void
+    goertzel_fc_impl::set_len(int len)
+    {
+      d_len = len;
+      d_goertzel.set_params(d_rate, d_len, d_freq);
+      set_decimation(d_len);
+    }
+
     int
     goertzel_fc_impl::work(int noutput_items,
 			   gr_vector_const_void_star &input_items,

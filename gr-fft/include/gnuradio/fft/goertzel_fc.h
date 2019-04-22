@@ -46,9 +46,13 @@ namespace gr {
 
       virtual void set_rate (int rate) = 0;
 
+      virtual void set_len (int len) = 0;
+
       virtual float freq() = 0;
 
       virtual int rate() = 0;
+
+      virtual int len() = 0;
     };
 
   } /* namespace fft */
