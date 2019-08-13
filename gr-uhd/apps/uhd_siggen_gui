@@ -1,6 +1,6 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 #
-# Copyright 2015 Free Software Foundation, Inc.
+# Copyright 2015-2016,2018 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -32,13 +32,14 @@ Signal Generator App
 # Generated: Sun Jun 28 17:21:28 2015
 ##################################################
 
+from __future__ import print_function
 import sip
 import sys
 import threading
 import time
 from distutils.version import StrictVersion
-from PyQt4 import Qt
-from PyQt4.QtCore import QObject, pyqtSlot
+from PyQt5 import Qt
+from PyQt5.QtCore import pyqtSlot
 from gnuradio import analog
 from gnuradio import eng_notation
 from gnuradio import gr
@@ -69,9 +70,9 @@ class uhd_siggen_gui(Qt.QWidget):
         Qt.QWidget.__init__(self)
         self.setWindowTitle("UHD Signal Generator")
         try:
-             self.setWindowIcon(Qt.QIcon.fromTheme('gnuradio-grc'))
+            self.setWindowIcon(Qt.QIcon.fromTheme('gnuradio-grc'))
         except:
-             pass
+            pass
         self.top_scroll_layout = Qt.QVBoxLayout()
         self.setLayout(self.top_scroll_layout)
         self.top_scroll = Qt.QScrollArea()
@@ -84,14 +85,16 @@ class uhd_siggen_gui(Qt.QWidget):
         self.top_grid_layout = Qt.QGridLayout()
         self.top_layout.addLayout(self.top_grid_layout)
         self.settings = Qt.QSettings("GNU Radio", "uhd_siggen_gui")
-        self.restoreGeometry(self.settings.value("geometry").toByteArray())
+        geo_settings = self.settings.value("geometry")
+        if geo_settings:
+            self.restoreGeometry(self.settings.value("geometry"))
 
         ##################################################
         # Widgets + Controls
         ##################################################
         ### Waveform Selector
-        self._waveform_options = uhd_siggen.waveforms.keys()
-        self._waveform_labels = uhd_siggen.waveforms.values()
+        self._waveform_options = list(uhd_siggen.WAVEFORMS.keys())
+        self._waveform_labels = list(uhd_siggen.WAVEFORMS.values())
         self._waveform_group_box = Qt.QGroupBox("Waveform")
         self._waveform_box = Qt.QHBoxLayout()
         class variable_chooser_button_group(Qt.QButtonGroup):
@@ -166,8 +169,8 @@ class uhd_siggen_gui(Qt.QWidget):
         ### Signal frequencies
         self._freq1_enable_on = (analog.GR_SIN_WAVE, "2tone", "sweep")
         self._freq1_offset_range = Range(
-                -self._sg[uhd_siggen.SAMP_RATE_KEY]/4,
-                self._sg[uhd_siggen.SAMP_RATE_KEY]/4,
+                -self._sg[uhd_siggen.SAMP_RATE_KEY]/2,
+                self._sg[uhd_siggen.SAMP_RATE_KEY]/2,
                 100,
                 self._sg.args.waveform_freq,
                 200
@@ -183,8 +186,8 @@ class uhd_siggen_gui(Qt.QWidget):
         self.top_grid_layout.addWidget(self._freq1_offset_win, 4,0,1,3)
         self._freq2_enable_on = ("2tone", "sweep")
         self._freq2_offset_range = Range(
-                -self._sg[uhd_siggen.SAMP_RATE_KEY]/4,
-                self._sg[uhd_siggen.SAMP_RATE_KEY]/4,
+                -self._sg[uhd_siggen.SAMP_RATE_KEY]/2,
+                self._sg[uhd_siggen.SAMP_RATE_KEY]/2,
                 100,
                 self._sg.args.waveform2_freq,
                 200
@@ -229,7 +232,7 @@ class uhd_siggen_gui(Qt.QWidget):
         self._samp_rate_line_edit = Qt.QLineEdit(eng_notation.num_to_str(self._sg[uhd_siggen.SAMP_RATE_KEY]))
         self._samp_rate_tool_bar.addWidget(self._samp_rate_line_edit)
         self._samp_rate_line_edit.returnPressed.connect(
-            lambda: self.set_samp_rate(eng_notation.str_to_num(str(self._samp_rate_line_edit.text().toAscii())))
+            lambda: self.set_samp_rate(eng_notation.str_to_num(str(self._samp_rate_line_edit.text())))
         )
         self.top_grid_layout.addWidget(self._samp_rate_tool_bar, 7,0,1,2)
         _sync_phases_push_button = Qt.QPushButton("Sync LOs")
@@ -259,11 +262,12 @@ class uhd_siggen_gui(Qt.QWidget):
         self._lo_locked_probe_0_tool_bar.addWidget(self._lo_locked_probe_0_label)
         self.top_grid_layout.addWidget(self._lo_locked_probe_0_tool_bar, 8,0,1,1)
         def _chan0_lo_locked_probe():
+            " Monitor lock status of LO on channel 0 "
             while True:
-                val = all([self.usrp.get_sensor('lo_locked', c).to_bool() for c in range(len(self._sg.channels))])
                 try:
+                    val = all([self.usrp.get_sensor('lo_locked', c).to_bool() for c in range(len(self._sg.channels))])
                     self.set_chan0_lo_locked(val)
-                except AttributeError:
+                except:
                     pass
                 time.sleep(.1)
         _chan0_lo_locked_thread = threading.Thread(target=_chan0_lo_locked_probe)
@@ -366,8 +370,8 @@ class uhd_siggen_gui(Qt.QWidget):
                 self.freq_fine + self.freq_coarse,
                 self.lo_offset
         )
-        for idx, c in enumerate(self._sg.channels):
-            tune_res = self.usrp.set_center_freq(tune_req, c)
+        for idx, chan in enumerate(self._sg.channels):
+            tune_res = self.usrp.set_center_freq(tune_req, chan)
             if idx == 0:
                 self.set_label_dsp_freq(tune_res.actual_dsp_freq)
                 self.set_label_rf_freq(tune_res.actual_rf_freq)
@@ -426,7 +430,7 @@ class uhd_siggen_gui(Qt.QWidget):
     def set_lo_locked_probe_0(self, lo_locked_probe_0):
         Qt.QMetaObject.invokeMethod(
                 self._lo_locked_probe_0_label, "setText",
-                Qt.Q_ARG("QString", str(self.lo_locked_probe_0))
+                Qt.Q_ARG("QString", str(lo_locked_probe_0))
         )
 
 
@@ -446,25 +450,27 @@ def main():
     """ Go, go, go! """
     parser = setup_parser()
     args = parser.parse_args()
-    if(StrictVersion(Qt.qVersion()) >= StrictVersion("4.5.0")):
-        Qt.QApplication.setGraphicsSystem(gr.prefs().get_string('qtgui', 'style', 'raster'))
     qapp = Qt.QApplication(sys.argv)
     siggen_gui = uhd_siggen_gui(args)
     siggen_gui.show()
     def quitting():
+        print("\nStopping flowgraph...")
         siggen_gui.stop()
-    qapp.connect(qapp, Qt.SIGNAL("aboutToQuit()"), quitting)
+    qapp.aboutToQuit.connect(quitting)
     qapp.exec_()
     siggen_gui = None #to clean up Qt widgets
 
-if __name__ == '__main__':
+def x11_init_threads():
+    " If on X11, init threads "
     import ctypes
-    import sys
     if sys.platform.startswith('linux'):
         try:
             x11 = ctypes.cdll.LoadLibrary('libX11.so')
             x11.XInitThreads()
         except:
             print("Warning: failed to XInitThreads()")
+
+if __name__ == '__main__':
+    x11_init_threads()
     main()
 

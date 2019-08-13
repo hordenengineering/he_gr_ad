@@ -1,4 +1,4 @@
-# Copyright 2012-2014 Free Software Foundation, Inc.
+# Copyright 2012-2014,2019 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -18,41 +18,10 @@
 # Boston, MA 02110-1301, USA.
 
 ########################################################################
-# Setup the include and linker paths
-########################################################################
-include_directories(
-    ${CMAKE_CURRENT_BINARY_DIR}/../include
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_BINARY_DIR}
-    ${GR_ANALOG_INCLUDE_DIRS}
-    ${GR_FILTER_INCLUDE_DIRS}
-    ${GR_FFT_INCLUDE_DIRS}
-    ${GR_BLOCKS_INCLUDE_DIRS}
-    ${GNURADIO_RUNTIME_INCLUDE_DIRS}
-    ${VOLK_INCLUDE_DIRS}
-    ${Boost_INCLUDE_DIRS}
-)
-
-link_directories(${Boost_LIBRARY_DIRS})
-
-if(ENABLE_GR_CTRLPORT)
-  ADD_DEFINITIONS(-DGR_CTRLPORT)
-endif(ENABLE_GR_CTRLPORT)
-
-########################################################################
-# Invoke macro to generate various sources and headers
-########################################################################
-include(GrMiscUtils)
-GR_EXPAND_X_CC_H(analog noise_source_X_impl     s i f c)
-GR_EXPAND_X_CC_H(analog fastnoise_source_X_impl s i f c)
-GR_EXPAND_X_CC_H(analog sig_source_X_impl     s i f c)
-GR_EXPAND_X_CC_H(analog random_uniform_source_X_impl b s i)
-
-########################################################################
 # Setup library
 ########################################################################
-list(APPEND analog_sources
-    ${generated_sources}
+
+add_library(gnuradio-analog
     cpm.cc
     squelch_base_cc_impl.cc
     squelch_base_ff_impl.cc
@@ -64,9 +33,11 @@ list(APPEND analog_sources
     cpfsk_bc_impl.cc
     ctcss_squelch_ff_impl.cc
     dpll_bb_impl.cc
+    fastnoise_source_impl.cc
     feedforward_agc_cc_impl.cc
     fmdet_cf_impl.cc
     frequency_modulator_fc_impl.cc
+    noise_source_impl.cc
     phase_modulator_fc_impl.cc
     pll_carriertracking_cc_impl.cc
     pll_freqdet_cf_impl.cc
@@ -78,8 +49,20 @@ list(APPEND analog_sources
     pwr_squelch_ff_impl.cc
     quadrature_demod_cf_impl.cc
     rail_ff_impl.cc
+    random_uniform_source_impl.cc
+    sig_source_impl.cc
     simple_squelch_cc_impl.cc
+    )
+target_link_libraries(gnuradio-analog PUBLIC
+    gnuradio-runtime
+    gnuradio-blocks
+    gnuradio-filter
 )
+target_include_directories(gnuradio-analog
+  PUBLIC
+  $<INSTALL_INTERFACE:include>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
+  )
 
 #Add Windows DLL resource file if using MSVC
 IF(MSVC)
@@ -90,41 +73,15 @@ IF(MSVC)
         ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-analog.rc
     @ONLY)
 
-    list(APPEND analog_sources
+    target_sources(gnuradio-analog PRIVATE
         ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-analog.rc
     )
 
 ENDIF(MSVC)
 
-list(APPEND analog_libs
-    gnuradio-runtime
-    gnuradio-blocks
-    gnuradio-filter
-    ${VOLK_LIBRARIES}
-    ${Boost_LIBRARIES}
-)
-
-add_library(gnuradio-analog SHARED ${analog_sources})
-target_link_libraries(gnuradio-analog ${analog_libs})
-GR_LIBRARY_FOO(gnuradio-analog RUNTIME_COMPONENT "analog_runtime" DEVEL_COMPONENT "analog_devel")
-add_dependencies(gnuradio-analog analog_generated_includes analog_generated_swigs gnuradio-filter)
-
-if(ENABLE_STATIC_LIBS)
-  add_library(gnuradio-analog_static STATIC ${analog_sources})
-
-  add_dependencies(gnuradio-analog_static
-    analog_generated_includes
-    gnuradio-filter_static)
-
-  if(NOT WIN32)
-    set_target_properties(gnuradio-analog_static
-      PROPERTIES OUTPUT_NAME gnuradio-analog)
-  endif(NOT WIN32)
-
-  install(TARGETS gnuradio-analog_static
-    ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT "analog_devel"   # .lib file
-    )
-endif(ENABLE_STATIC_LIBS)
+if(BUILD_SHARED_LIBS)
+    GR_LIBRARY_FOO(gnuradio-analog)
+endif()
 
 ########################################################################
 # QA C++ Code for gr-analog
@@ -132,25 +89,13 @@ endif(ENABLE_STATIC_LIBS)
 if(ENABLE_TESTING)
   include(GrTest)
 
-  include_directories(${CPPUNIT_INCLUDE_DIRS})
-  link_directories(${CPPUNIT_LIBRARY_DIRS})
-
   list(APPEND test_gr_analog_sources
-    ${CMAKE_CURRENT_SOURCE_DIR}/test_gr_analog.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/qa_analog.cc
-    )
-
-  add_executable(test-gr-analog ${test_gr_analog_sources})
-
-  target_link_libraries(
-    test-gr-analog
-    gnuradio-runtime
-    gnuradio-analog
-    ${Boost_LIBRARIES}
-    ${CPPUNIT_LIBRARIES}
   )
+  list(APPEND GR_TEST_TARGET_DEPS gnuradio-analog)
 
-  list(APPEND GR_TEST_TARGET_DEPS gnuradio-analog gnuradio-filter gnuradio-fft)
-
-  GR_ADD_TEST(test_gr_analog test-gr-analog)
+  foreach(qa_file ${test_gr_analog_sources})
+    GR_ADD_CPP_TEST("analog_${qa_file}"
+      ${CMAKE_CURRENT_SOURCE_DIR}/${qa_file}
+    )
+  endforeach(qa_file)
 endif(ENABLE_TESTING)

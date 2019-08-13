@@ -27,18 +27,25 @@ Remote Procedure Call (RPC) transports, the Apache Thrift middle-ware RPC
 is currently the only supported transport.
 
 """
+from __future__ import print_function
+from __future__ import unicode_literals
 
-import exceptions
+from gnuradio.ctrlport.RPCConnection import RPCMethods
+try:
+    from gnuradio.ctrlport.RPCConnectionThrift import RPCConnectionThrift
+    from thrift.transport.TTransport import TTransportException
+except ImportError:
+    print("ControlPort requires Thrift, but it was not found!")
+    pass
+
 
 """
 GNURadioControlPortClient is the main class for creating a GNU Radio
 ControlPort client application for all transports.
 
-Two constructors are provided for creating a connection to ControlPort.
-
 """
 
-class GNURadioControlPortClient():
+class GNURadioControlPortClient(object):
     """
     Constructor for creating a ControlPort connection to a specified host / port
 
@@ -68,65 +75,18 @@ class GNURadioControlPortClient():
             such as QtGui.QApplication.exec_
 
     """
-
-    def __init__(self, host = None, port = None, rpcmethod = 'thrift', callback = None, blockingcallback = None):
-        __init__([host, port], rpcmethod, callback, blockingcallback)
-
-    """
-    Constructor for creating a ControlPort from a tuple of command line arguments (i.e. sys.argv)
-
-    Args:
-        argv: List of command line arguments. Future implementations may parse the argument list
-            for OptionParser style key / value pairs, however the current implementation
-            simply takes argv[1] and argv[2] as the connection hostname and port, respectively.
-
-    Example Usage:
-
-        In the following QT client example, the ControlPort host and port are specified to
-        the Client application as the first two command line arguments. The MAINWindow class is
-        of the type QtGui.QMainWindow, and is the main window for the QT application. MyApp
-        is a simple helper class for starting the application.
-
-        class MAINWindow(QtGui.QMainWindow):
-            ... QT Application implementation ...
-
-        class MyApp(object):
-            def __init__(self, args):
-                from GNURadioControlPortClient import GNURadioControlPortClient
-                GNURadioControlPortClient(args, 'thrift', self.run, QtGui.QApplication(sys.argv).exec_)
-
-            def run(self, client):
-                MAINWindow(client).show()
-
-        MyApp(sys.argv)
-
-
-    """
-
-    def __init__(self, argv = [], rpcmethod = 'thrift', callback = None, blockingcallback = None):
-        if len(argv) > 1: host = argv[1]
-        else: host = None
-
-        if len(argv) > 2: port = argv[2]
-        else: port = None
-
+    def __init__(self, host=None, port=None, rpcmethod='thrift', callback=None, blockingcallback=None):
         self.client = None
 
-        from gnuradio.ctrlport.RPCConnection import RPCMethods
-        if RPCMethods.has_key(rpcmethod):
-            from gnuradio.ctrlport.RPCConnectionThrift import RPCConnectionThrift
+        if rpcmethod in RPCMethods:
             if rpcmethod == 'thrift':
-                #print("making RPCConnectionThrift")
                 self.client = RPCConnectionThrift(host, port)
-                #print("made %s" % self.client)
 
-                #print("making callback call")
                 if not callback is None:
                     callback(self.client)
 
-                #print("making blockingcallback call")
                 if not blockingcallback is None:
                     blockingcallback()
         else:
-            print("Unsupported RPC method: ", rpcmethod)
-            raise exceptions.ValueError()
+            print(("Unsupported RPC method: ", rpcmethod))
+            raise ValueError()

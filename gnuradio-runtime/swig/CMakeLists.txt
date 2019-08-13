@@ -1,4 +1,4 @@
-# Copyright 2013 Free Software Foundation, Inc.
+# Copyright 2013,2019 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -24,20 +24,13 @@ include(GrPython)
 include(GrSwig)
 
 set(GR_SWIG_INCLUDE_DIRS
-    ${GNURADIO_RUNTIME_INCLUDE_DIRS}
-    ${GNURADIO_RUNTIME_SWIG_INCLUDE_DIRS}
-    ${CMAKE_CURRENT_BINARY_DIR}
-    ${LOG4CPP_INCLUDE_DIRS}
-    ${Boost_INCLUDE_DIRS}
-)
-
-link_directories(${Boost_LIBRARY_DIRS})
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
+  $<INSTALL_INTERFACE:include/gnuradio/swig>
+  )
 
 set(GR_SWIG_LIBRARIES
-    gnuradio-pmt
-    gnuradio-runtime
-    ${LOG4CPP_LIBRARIES}
-)
+    gnuradio-runtime)
 
 ###############################################################
 #    Build pmt swig
@@ -46,48 +39,46 @@ set(GR_SWIG_LIBRARIES
 set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/pmt_swig_doc.i)
 set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include/pmt
   ${CMAKE_CURRENT_BINARY_DIR}/../include/pmt)
-list(APPEND GR_SWIG_TARGET_DEPS pmt_generated)
 GR_SWIG_MAKE(pmt_swig pmt_swig.i)
 
 GR_SWIG_INSTALL(
     TARGETS pmt_swig
     DESTINATION ${GR_PYTHON_DIR}/pmt
-    COMPONENT "runtime_python"
 )
-
-add_custom_target(pmt_swig DEPENDS ${SWIG_MODULE_pmt_swig_REAL_NAME})
 
 ###############################################################
 #    Build gnuradio-runtime swig
 ###############################################################
-
-# Only use if log4cpp is installed
-# Define ENABLE_GR_LOG for the .i file to ignore it.
-if(ENABLE_GR_LOG)
-     SET(GR_SWIG_FLAGS "-DENABLE_GR_LOG")
-endif(ENABLE_GR_LOG)
-
-if(ENABLE_GR_CTRLPORT)
-  ADD_DEFINITIONS(-DGR_CTRLPORT)
-  list(APPEND GR_SWIG_FLAGS -DGR_CTRLPORT)
-endif(ENABLE_GR_CTRLPORT)
-
 set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/runtime_swig_doc.i)
 set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include)
 set(GR_RUNTIME_SWIG_DOC_FILE ${GR_SWIG_DOC_FILE})
+if(ENABLE_GR_CTRLPORT)
+  set(GR_SWIG_FLAGS "-DGR_CTRLPORT")
+endif()
 list(APPEND GR_SWIG_TARGET_DEPS pmt_swig)
 
 GR_SWIG_MAKE(runtime_swig runtime_swig.i)
 
-GR_SWIG_INSTALL(
-    TARGETS runtime_swig
-    DESTINATION ${GR_PYTHON_DIR}/gnuradio/gr
-    COMPONENT "runtime_python"
+install(
+  TARGETS runtime_swig
+  EXPORT runtime_swig-export
+  DESTINATION ${GR_PYTHON_DIR}/gnuradio/gr
+  )
+
+include(GrPython)
+GR_PYTHON_INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/runtime_swig.py
+  DESTINATION ${GR_PYTHON_DIR}/gnuradio/gr
+  DEPENDS runtime_swig
+)
+
+install(EXPORT runtime_swig-export
+  FILE runtime_swigTargets.cmake
+  NAMESPACE gnuradio::
+  DESTINATION ${GR_CMAKE_DIR}
 )
 
 install(
     FILES
-    gnuradio_swig_bug_workaround.h
     runtime_swig.i
     gnuradio.i
     basic_block.i
@@ -95,13 +86,10 @@ install(
     block_detail.i
     block_gateway.i
     buffer.i
-    complex_vec_test.i
     constants.i
     feval.i
-    gnuradio.i
     gr_ctrlport.i
     gr_extras.i
-    gr_intrusive_ptr.i
     gr_logger.i
     gr_shared_ptr.i
     gr_swig_block_magic.i
@@ -113,8 +101,8 @@ install(
     msg_queue.i
     pmt_swig.i
     prefs.i
+    py3compat.i
     realtime.i
-    single_threaded_scheduler.i
     sync_block.i
     sync_decimator.i
     sync_interpolator.i
@@ -124,5 +112,4 @@ install(
     ${CMAKE_CURRENT_BINARY_DIR}/runtime_swig_doc.i
     ${CMAKE_CURRENT_BINARY_DIR}/pmt_swig_doc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
-    COMPONENT "runtime_swig"
 )

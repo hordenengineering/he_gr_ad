@@ -34,52 +34,13 @@ GR_REGISTER_COMPONENT("gr-fft" ENABLE_GR_FFT
     Boost_FOUND
     ENABLE_GNURADIO_RUNTIME
     ENABLE_GR_BLOCKS
-    FFTW3F_FOUND
-)
-
-GR_SET_GLOBAL(GR_FFT_INCLUDE_DIRS
-    ${CMAKE_CURRENT_SOURCE_DIR}/lib
-    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    FFTW3f_FOUND
 )
 
 ########################################################################
 # Begin conditional configuration
 ########################################################################
 if(ENABLE_GR_FFT)
-
-########################################################################
-# Setup CPack components
-########################################################################
-include(GrPackage)
-CPACK_SET(CPACK_COMPONENT_GROUP_FFT_DESCRIPTION "GNU Radio FFT Blocks")
-
-CPACK_COMPONENT("fft_runtime"
-    GROUP        "FFT"
-    DISPLAY_NAME "Runtime"
-    DESCRIPTION  "Runtime"
-    DEPENDS      "runtime_runtime"
-)
-
-CPACK_COMPONENT("fft_devel"
-    GROUP        "FFT"
-    DISPLAY_NAME "Development"
-    DESCRIPTION  "C++ headers, package config, import libraries"
-    DEPENDS      "runtime_devel"
-)
-
-CPACK_COMPONENT("fft_python"
-    GROUP        "FFT"
-    DISPLAY_NAME "Python"
-    DESCRIPTION  "Python modules for runtime; GRC xml files"
-    DEPENDS      "runtime_python;fft_runtime"
-)
-
-CPACK_COMPONENT("fft_swig"
-    GROUP        "FFT"
-    DISPLAY_NAME "SWIG"
-    DESCRIPTION  "SWIG development .i files"
-    DEPENDS      "runtime_swig;fft_python;fft_devel"
-)
 
 ########################################################################
 # Add subdirectories
@@ -89,10 +50,11 @@ add_subdirectory(lib)
 if(ENABLE_PYTHON)
     add_subdirectory(swig)
     add_subdirectory(python/fft)
-    add_subdirectory(grc)
 endif(ENABLE_PYTHON)
-#add_subdirectory(examples)
-add_subdirectory(doc)
+if(ENABLE_GRC)
+    add_subdirectory(grc)
+endif(ENABLE_GRC)
+add_subdirectory(docs)
 
 ########################################################################
 # Create Pkg Config File
@@ -105,7 +67,6 @@ configure_file(
 install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-fft.pc
     DESTINATION ${GR_LIBRARY_DIR}/pkgconfig
-    COMPONENT "fft_devel"
 )
 
 endif(ENABLE_GR_FFT)

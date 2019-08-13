@@ -19,17 +19,19 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from runtime_swig import top_block_swig, \
-    top_block_wait_unlocked, top_block_run_unlocked, \
-    top_block_start_unlocked, top_block_stop_unlocked, \
-    top_block_unlock_unlocked, dot_graph_tb
+from __future__ import absolute_import
+from __future__ import unicode_literals
 
-#import gnuradio.gr.gr_threading as _threading
-import gr_threading as _threading
+from .runtime_swig import (top_block_swig,
+    top_block_wait_unlocked, top_block_run_unlocked,
+    top_block_start_unlocked, top_block_stop_unlocked,
+    top_block_unlock_unlocked, dot_graph_tb)
 
-from hier_block2 import hier_block2
+import threading
 
-class _top_block_waiter(_threading.Thread):
+from .hier_block2 import hier_block2
+
+class _top_block_waiter(threading.Thread):
     """
     This kludge allows ^C to interrupt top_block.run and top_block.wait
 
@@ -42,7 +44,7 @@ class _top_block_waiter(_threading.Thread):
     thread), we create a separate thread that does the blocking wait,
     and then use the thread that called wait to do a slow poll of an
     event queue.  That thread, which is executing "wait" below is
-    interruptable, and if it sees a KeyboardInterrupt, executes a stop
+    interruptible, and if it sees a KeyboardInterrupt, executes a stop
     on the top_block, then goes back to waiting for it to complete.
     This ensures that the unlocked wait that was in progress (in the
     _top_block_waiter thread) can complete, release its mutex and back
@@ -50,13 +52,13 @@ class _top_block_waiter(_threading.Thread):
     things occur like leaving the USRP transmitter sending a carrier.
 
     See also top_block.wait (below), which uses this class to implement
-    the interruptable wait.
+    the interruptible wait.
     """
     def __init__(self, tb):
-        _threading.Thread.__init__(self)
+        threading.Thread.__init__(self)
         self.setDaemon(1)
         self.tb = tb
-        self.event = _threading.Event()
+        self.event = threading.Event()
         self.start()
 
     def run(self):

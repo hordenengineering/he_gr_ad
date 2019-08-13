@@ -79,16 +79,12 @@
 
 %include <uhd/types/device_addr.hpp>
 
-%include <uhd/types/io_type.hpp>
-
 %template(range_vector_t) std::vector<uhd::range_t>; //define before range
 %include <uhd/types/ranges.hpp>
 
 %include <uhd/types/tune_request.hpp>
 
 %include <uhd/types/tune_result.hpp>
-
-%include <uhd/types/io_type.hpp>
 
 %include <uhd/types/time_spec.hpp>
 
@@ -105,11 +101,13 @@
         temp -= what;
         return temp;
     }
+    bool __eq__(const uhd::time_spec_t &what)
+    {
+      return (what == *self);
+    }
 };
 
 %include <uhd/types/stream_cmd.hpp>
-
-%include <uhd/types/clock_config.hpp>
 
 %include <uhd/types/metadata.hpp>
 
@@ -155,8 +153,20 @@ static uhd::device_addrs_t find_devices_raw(const uhd::device_addr_t &dev_addr =
 ////////////////////////////////////////////////////////////////////////
 %{
 static const size_t ALL_MBOARDS = uhd::usrp::multi_usrp::ALL_MBOARDS;
+static const size_t ALL_CHANS = uhd::usrp::multi_usrp::ALL_CHANS;
+static const std::string ALL_GAINS = uhd::usrp::multi_usrp::ALL_GAINS;
+
+#ifdef UHD_USRP_MULTI_USRP_LO_CONFIG_API
+static const std::string ALL_LOS = uhd::usrp::multi_usrp::ALL_LOS;
+#else
+static const std::string ALL_LOS;
+#endif
 %}
+
 static const size_t ALL_MBOARDS;
+static const size_t ALL_CHANS;
+static const std::string ALL_GAINS;
+static const std::string ALL_LOS;
 
 %{
 #include <uhd/version.hpp>

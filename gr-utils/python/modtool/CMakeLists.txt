@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2018 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -17,35 +17,12 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-include(GrPython)
-
 GR_PYTHON_INSTALL(FILES
     __init__.py
-    cmakefile_editor.py
-    code_generator.py
-    grc_xml_generator.py
-    modtool_add.py
-    modtool_base.py
-    modtool_disable.py
-    modtool_help.py
-    modtool_info.py
-    modtool_makexml.py
-    modtool_newmod.py
-    modtool_rm.py
-    modtool_rename.py
-    parser_cc_block.py
-    scm.py
-    templates.py
-    util_functions.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/modtool
-    COMPONENT "utils"
 )
 
-set(GR_PKG_MODTOOL_DATA_DIR ${GR_PKG_DATA_DIR}/modtool)
-install(DIRECTORY gr-newmod
-    DESTINATION ${GR_PKG_MODTOOL_DATA_DIR}
-    COMPONENT "utils"
-)
+set(GR_PKG_MODTOOL_DATA_DIR ${GR_PKG_DATA_DIR}/modtool/templates)
 
 
 ########################################################################
@@ -61,6 +38,13 @@ configure_file(
 install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/modtool.conf
     DESTINATION ${GR_PREFSDIR}
-    COMPONENT "utils"
 )
 
+########################################################################
+# Add subdirectories
+########################################################################
+add_subdirectory(core)
+add_subdirectory(cli)
+add_subdirectory(tools)
+add_subdirectory(templates)
+add_subdirectory(tests)

@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2019 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -21,22 +21,6 @@ include(GrPython)
 
 GR_PYTHON_INSTALL(
     PROGRAMS
-    fm_tx4.py
-    fm_tx_2_daughterboards.py
-    max_power.py
-    usrp_am_mw_rcv.py
-    usrp_nbfm_ptt.py
-    usrp_nbfm_rcv.py
-    usrp_spectrum_sense.py
-    usrp_tv_rcv_nogui.py
-    usrp_tv_rcv.py
-    usrp_wfm_rcv2_nogui.py
-    usrp_wfm_rcv_fmdet.py
-    usrp_wfm_rcv_nogui.py
-    usrp_wfm_rcv_pll.py
-    usrp_wfm_rcv.py
-    usrp_wfm_rcv_sca.py
-    usrp_wxapt_rcv.py
+    freq_hopping.py
     DESTINATION ${GR_PKG_UHD_EXAMPLES_DIR}
-    COMPONENT "uhd_python"
 )

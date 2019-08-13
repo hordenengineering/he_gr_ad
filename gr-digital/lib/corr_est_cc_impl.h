@@ -29,45 +29,52 @@
 using namespace gr::filter;
 
 namespace gr {
-  namespace digital {
+namespace digital {
 
-    class corr_est_cc_impl : public corr_est_cc
-    {
-    private:
-      pmt::pmt_t d_src_id;
-      std::vector<gr_complex> d_symbols;
-      float d_sps;
-      unsigned int d_mark_delay, d_stashed_mark_delay;
-      float d_thresh, d_stashed_threshold;
-      kernel::fft_filter_ccc *d_filter;
+class corr_est_cc_impl : public corr_est_cc
+{
+private:
+    pmt::pmt_t d_src_id;
+    std::vector<gr_complex> d_symbols;
+    float d_sps;
+    unsigned int d_mark_delay, d_stashed_mark_delay;
+    float d_thresh, d_stashed_threshold;
+    kernel::fft_filter_ccc* d_filter;
 
-      gr_complex *d_corr;
-      float *d_corr_mag;
+    gr_complex* d_corr;
+    float* d_corr_mag;
 
-      void _set_mark_delay(unsigned int mark_delay);
-      void _set_threshold(float threshold);
+    float d_scale;
+    float d_pfa; // probability of false alarm
 
-    public:
-      corr_est_cc_impl(const std::vector<gr_complex> &symbols,
-                       float sps, unsigned int mark_delay,
-                       float threshold=0.9);
-      ~corr_est_cc_impl();
+    tm_type d_threshold_method;
 
-      std::vector<gr_complex> symbols() const;
-      void set_symbols(const std::vector<gr_complex> &symbols);
+    void _set_mark_delay(unsigned int mark_delay);
+    void _set_threshold(float threshold);
 
-      unsigned int mark_delay() const;
-      void set_mark_delay(unsigned int mark_delay);
+public:
+    corr_est_cc_impl(const std::vector<gr_complex>& symbols,
+                     float sps,
+                     unsigned int mark_delay,
+                     float threshold = 0.9,
+                     tm_type threshold_method = THRESHOLD_ABSOLUTE);
+    ~corr_est_cc_impl();
 
-      float threshold() const;
-      void set_threshold(float threshold);
+    std::vector<gr_complex> symbols() const;
+    void set_symbols(const std::vector<gr_complex>& symbols);
 
-      int work(int noutput_items,
-               gr_vector_const_void_star &input_items,
-               gr_vector_void_star &output_items);
-    };
+    unsigned int mark_delay() const;
+    void set_mark_delay(unsigned int mark_delay);
 
-  } // namespace digital
+    float threshold() const;
+    void set_threshold(float threshold);
+
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
+
+} // namespace digital
 } // namespace gr
 
 #endif /* INCLUDED_DIGITAL_CORR_EST_CC_IMPL_H */

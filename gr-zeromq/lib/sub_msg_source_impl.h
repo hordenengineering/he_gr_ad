@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2013,2014 Free Software Foundation, Inc.
+ * Copyright 2013,2014,2019 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio.
  *
@@ -23,33 +23,42 @@
 #ifndef INCLUDED_ZEROMQ_SUB_MSG_SOURCE_IMPL_H
 #define INCLUDED_ZEROMQ_SUB_MSG_SOURCE_IMPL_H
 
+#include "zmq_common_impl.h"
 #include <gnuradio/zeromq/sub_msg_source.h>
-#include "zmq.hpp"
 
 namespace gr {
-  namespace zeromq {
+namespace zeromq {
 
-    class sub_msg_source_impl : public sub_msg_source
+class sub_msg_source_impl : public sub_msg_source
+{
+private:
+    int d_timeout; // microseconds, -1 is blocking
+    zmq::context_t* d_context;
+    zmq::socket_t* d_socket;
+    boost::thread* d_thread;
+    const pmt::pmt_t d_port;
+
+    void readloop();
+
+public:
+    bool d_finished;
+
+    sub_msg_source_impl(char* address, int timeout);
+    ~sub_msg_source_impl();
+
+    bool start();
+    bool stop();
+
+    std::string last_endpoint() override
     {
-     private:
-      int             d_timeout; // microseconds, -1 is blocking
-      zmq::context_t  *d_context;
-      zmq::socket_t   *d_socket;
-      boost::thread   *d_thread;
+        char addr[256];
+        size_t addr_len = sizeof(addr);
+        d_socket->getsockopt(ZMQ_LAST_ENDPOINT, addr, &addr_len);
+        return std::string(addr, addr_len - 1);
+    }
+};
 
-      void readloop();
-
-     public:
-      bool d_finished;
-
-      sub_msg_source_impl(char *address, int timeout);
-      ~sub_msg_source_impl();
-
-      bool start();
-      bool stop();
-    };
-
-  } // namespace zeromq
+} // namespace zeromq
 } // namespace gr
 
 #endif /* INCLUDED_ZEROMQ_SUB_MSG_SOURCE_IMPL_H */

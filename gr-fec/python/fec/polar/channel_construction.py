@@ -23,12 +23,14 @@
 foundational paper for polar codes.
 '''
 
+from __future__ import print_function
+from __future__ import absolute_import
 
-from channel_construction_bec import calculate_bec_channel_capacities
-from channel_construction_bec import design_snr_to_bec_eta
-from channel_construction_bec import bhattacharyya_bounds
-from channel_construction_awgn import tal_vardy_tpm_algorithm
-from helper_functions import *
+from .channel_construction_bec import calculate_bec_channel_capacities
+from .channel_construction_bec import design_snr_to_bec_eta
+from .channel_construction_bec import bhattacharyya_bounds
+from .channel_construction_awgn import tal_vardy_tpm_algorithm
+from .helper_functions import *
 
 
 Z_PARAM_FIRST_HEADER_LINE = "Bhattacharyya parameters (Z-parameters) for a polar code"
@@ -37,7 +39,7 @@ Z_PARAM_FIRST_HEADER_LINE = "Bhattacharyya parameters (Z-parameters) for a polar
 def get_frozen_bit_indices_from_capacities(chan_caps, nfrozen):
     indexes = np.array([], dtype=int)
     while indexes.size < nfrozen:
-        index = np.argmin(chan_caps)
+        index = np.argmin(chan_caps).astype(int)
         indexes = np.append(indexes, index)
         chan_caps[index] = 2.0  # make absolutely sure value is out of range!
     return np.sort(indexes)
@@ -46,7 +48,7 @@ def get_frozen_bit_indices_from_capacities(chan_caps, nfrozen):
 def get_frozen_bit_indices_from_z_parameters(z_params, nfrozen):
     indexes = np.array([], dtype=int)
     while indexes.size < nfrozen:
-        index = np.argmax(z_params)
+        index = np.argmax(z_params).astype(int)
         indexes = np.append(indexes, index)
         z_params[index] = -1.0
     return np.sort(indexes)
@@ -117,7 +119,7 @@ def load_z_parameters(block_size, design_snr, mu):
 
 def main():
     np.set_printoptions(precision=3, linewidth=150)
-    print 'channel construction Bhattacharyya bounds by Arikan'
+    print('channel construction Bhattacharyya bounds by Arikan')
     n = 10
     m = 2 ** n
     k = m // 2

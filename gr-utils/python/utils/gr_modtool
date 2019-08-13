@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012, 2018 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -21,29 +21,12 @@
 #
 """ A tool for editing GNU Radio out-of-tree modules. """
 
-from gnuradio.modtool import *
 
+from gnuradio.modtool.cli.base import cli
 
-def main():
-    """ Here we go. Parse command, choose class and run. """
-    cmd_dict = get_class_dict(globals().values())
-    command = get_command_from_argv(cmd_dict.keys())
-    if command is None:
-        print 'Usage:' + Templates['usage']
-        exit(2)
-    modtool = cmd_dict[command]()
-    try:
-        (options, args) = modtool.parser.parse_args()
-        modtool.setup(options, args)
-        modtool.run()
-
-    except ModToolException as err:
-        print >> sys.stderr, err
-        exit(1)
 
 if __name__ == '__main__':
     try:
-        main()
+        cli()
     except KeyboardInterrupt:
         pass
-

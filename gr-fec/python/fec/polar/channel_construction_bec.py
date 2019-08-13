@@ -18,8 +18,13 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import unicode_literals
+
 import numpy as np
-import helper_functions as hf
+from . import helper_functions as hf
 
 
 def bec_channel(eta):
@@ -27,7 +32,7 @@ def bec_channel(eta):
     binary erasure channel (BEC)
     for each y e Y
     W(y|0) * W(y|1) = 0 or W(y|0) = W(y|1)
-    transistions are 1 -> 1 or 0 -> 0 or {0, 1} -> ? (erased symbol)
+    transitions are 1 -> 1 or 0 -> 0 or {0, 1} -> ? (erased symbol)
     '''
     # looks like BSC but should be interpreted differently.
     w = np.array((1 - eta, eta, 1 - eta), dtype=float)
@@ -220,7 +225,7 @@ def plot_capacity_histogram(design_snr, save_file=None):
 
 
 def main():
-    print 'channel construction main'
+    print('channel construction main')
     n = 11
     block_size = int(2 ** n)
     design_snr = -1.59

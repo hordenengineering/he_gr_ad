@@ -19,32 +19,22 @@
 # Boston, MA 02110-1301, USA.
 #
 
-# See gnuradio-examples/python/digital for examples
-
 """
 Generic modulation and demodulation.
 """
 
-from gnuradio import gr
-from modulation_utils import extract_kwargs_from_options_for_class
-from utils import mod_codes
-import digital_swig as digital
+# See gnuradio-examples/python/digital for examples
+
+from __future__ import print_function
+from __future__ import absolute_import
+from __future__ import unicode_literals
+
+from gnuradio import gr, blocks, filter, analog
+from .modulation_utils import extract_kwargs_from_options_for_class
+from .utils import mod_codes
+from . import digital_swig as digital
 import math
 
-try:
-    from gnuradio import blocks
-except ImportError:
-    import blocks_swig as blocks
-
-try:
-    from gnuradio import filter
-except ImportError:
-    import filter_swig as filter
-
-try:
-    from gnuradio import analog
-except ImportError:
-    import analog_swig as analog
 
 # default values (used in __init__ and add_options)
 _def_samples_per_symbol = 2
@@ -81,7 +71,7 @@ def add_common_options(parser):
                       help="Select modulation code from: %s [default=%%default]"
                             % (', '.join(mod_codes.codes),))
     parser.add_option("", "--excess-bw", type="float", default=_def_excess_bw,
-                      help="set RRC excess bandwith factor [default=%default]")
+                      help="set RRC excess bandwidth factor [default=%default]")
 
 
 # /////////////////////////////////////////////////////////////////////////////
@@ -113,9 +103,9 @@ class generic_mod(gr.hier_block2):
                  verbose=_def_verbose,
                  log=_def_log):
 
-	gr.hier_block2.__init__(self, "generic_mod",
-				gr.io_signature(1, 1, gr.sizeof_char),       # Input signature
-				gr.io_signature(1, 1, gr.sizeof_gr_complex)) # Output signature
+        gr.hier_block2.__init__(self, "generic_mod",
+                                gr.io_signature(1, 1, gr.sizeof_char),       # Input signature
+                                gr.io_signature(1, 1, gr.sizeof_gr_complex)) # Output signature
 
         self._constellation = constellation
         self._samples_per_symbol = samples_per_symbol
@@ -125,7 +115,7 @@ class generic_mod(gr.hier_block2):
         self.pre_diff_code = pre_diff_code and self._constellation.apply_pre_diff_code()
 
         if self._samples_per_symbol < 2:
-            raise TypeError, ("sps must be >= 2, is %f" % self._samples_per_symbol)
+            raise TypeError("sps must be >= 2, is %f" % self._samples_per_symbol)
 
         arity = pow(2,self.bits_per_symbol())
 
@@ -153,7 +143,7 @@ class generic_mod(gr.hier_block2):
         self.rrc_filter = filter.pfb_arb_resampler_ccf(self._samples_per_symbol,
                                                        self.rrc_taps)
 
-	# Connect
+        # Connect
         self._blocks = [self, self.bytes2chunks]
         if self.pre_diff_code:
             self._blocks.append(self.symbol_mapper)
@@ -175,12 +165,12 @@ class generic_mod(gr.hier_block2):
     def bits_per_symbol(self):   # static method that's also callable on an instance
         return self._constellation.bits_per_symbol()
 
+    @staticmethod
     def add_options(parser):
         """
         Adds generic modulation options to the standard parser
         """
         add_common_options(parser)
-    add_options=staticmethod(add_options)
 
     def extract_kwargs_from_options(cls, options):
         """
@@ -191,12 +181,12 @@ class generic_mod(gr.hier_block2):
 
 
     def _print_verbage(self):
-        print "\nModulator:"
-        print "bits per symbol:     %d" % self.bits_per_symbol()
-        print "RRC roll-off factor: %.2f" % self._excess_bw
+        print("\nModulator:")
+        print("bits per symbol:     %d" % self.bits_per_symbol())
+        print("RRC roll-off factor: %.2f" % self._excess_bw)
 
     def _setup_logging(self):
-        print "Modulation logging turned on."
+        print("Modulation logging turned on.")
         self.connect(self.bytes2chunks,
                      blocks.file_sink(gr.sizeof_char, "tx_bytes2chunks.8b"))
         if self.pre_diff_code:
@@ -249,9 +239,9 @@ class generic_demod(gr.hier_block2):
                  verbose=_def_verbose,
                  log=_def_log):
 
-	gr.hier_block2.__init__(self, "generic_demod",
-				gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
-				gr.io_signature(1, 1, gr.sizeof_char))       # Output signature
+        gr.hier_block2.__init__(self, "generic_demod",
+                                gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
+                                gr.io_signature(1, 1, gr.sizeof_char))       # Output signature
 
         self._constellation = constellation
         self._samples_per_symbol = samples_per_symbol
@@ -263,7 +253,7 @@ class generic_demod(gr.hier_block2):
         self._differential = differential
 
         if self._samples_per_symbol < 2:
-            raise TypeError, ("sps must be >= 2, is %d" % self._samples_per_symbol)
+            raise TypeError("sps must be >= 2, is %d" % self._samples_per_symbol)
 
         # Only apply a predifferential coding if the constellation also supports it.
         self.pre_diff_code = pre_diff_code and self._constellation.apply_pre_diff_code()
@@ -324,19 +314,19 @@ class generic_demod(gr.hier_block2):
     def samples_per_symbol(self):
         return self._samples_per_symbol
 
-    def bits_per_symbol(self):   # staticmethod that's also callable on an instance
+    def bits_per_symbol(self):
         return self._constellation.bits_per_symbol()
 
     def _print_verbage(self):
-        print "\nDemodulator:"
-        print "bits per symbol:     %d"   % self.bits_per_symbol()
-        print "RRC roll-off factor: %.2f" % self._excess_bw
-        print "FLL bandwidth:       %.2e" % self._freq_bw
-        print "Timing bandwidth:    %.2e" % self._timing_bw
-        print "Phase bandwidth:     %.2e" % self._phase_bw
+        print("\nDemodulator:")
+        print("bits per symbol:     %d"   % self.bits_per_symbol())
+        print("RRC roll-off factor: %.2f" % self._excess_bw)
+        print("FLL bandwidth:       %.2e" % self._freq_bw)
+        print("Timing bandwidth:    %.2e" % self._timing_bw)
+        print("Phase bandwidth:     %.2e" % self._phase_bw)
 
     def _setup_logging(self):
-        print "Modulation logging turned on."
+        print("Modulation logging turned on.")
         self.connect(self.agc,
                      blocks.file_sink(gr.sizeof_gr_complex, "rx_agc.32fc"))
         self.connect((self.freq_recov, 0),
@@ -372,6 +362,7 @@ class generic_demod(gr.hier_block2):
         self.connect(self.unpack,
                      blocks.file_sink(gr.sizeof_char, "rx_unpack.8b"))
 
+    @staticmethod
     def add_options(parser):
         """
         Adds generic demodulation options to the standard parser
@@ -385,7 +376,6 @@ class generic_demod(gr.hier_block2):
                           help="set phase tracking loop lock-in bandwidth [default=%default]")
         parser.add_option("", "--timing-bw", type="float", default=_def_timing_bw,
                           help="set timing symbol sync loop gain lock-in bandwidth [default=%default]")
-    add_options=staticmethod(add_options)
 
     def extract_kwargs_from_options(cls, options):
         """

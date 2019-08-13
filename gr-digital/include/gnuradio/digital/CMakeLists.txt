@@ -1,4 +1,4 @@
-# Copyright 2011-2015 Free Software Foundation, Inc.
+# Copyright (C) 2011-2017 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -18,24 +18,14 @@
 # Boston, MA 02110-1301, USA.
 
 ########################################################################
-# Invoke macro to generate various headers
-#######################################################################
-include(GrMiscUtils)
-GR_EXPAND_X_H(digital chunks_to_symbols_XX     bf bc sf sc if ic)
-GR_EXPAND_X_H(digital burst_shaper_XX     cc ff)
-
-add_custom_target(digital_generated_includes DEPENDS
-    ${generated_includes}
-)
-
-########################################################################
 # Install header files
 ########################################################################
 install(FILES
-    ${generated_includes}
     additive_scrambler_bb.h
     api.h
     binary_slicer_fb.h
+    burst_shaper.h
+    chunks_to_symbols.h
     clock_recovery_mm_cc.h
     clock_recovery_mm_ff.h
     cma_equalizer_cc.h
@@ -46,9 +36,9 @@ install(FILES
     corr_est_cc.h
     correlate_access_code_bb.h
     correlate_access_code_tag_bb.h
+    correlate_access_code_tag_ff.h
     correlate_access_code_bb_ts.h
     correlate_access_code_ff_ts.h
-    correlate_and_sync_cc.h
     costas_loop_cc.h
     cpmmod_bc.h
     crc32.h
@@ -65,6 +55,7 @@ install(FILES
     glfsr_source_f.h
     hdlc_deframer_bp.h
     hdlc_framer_pb.h
+    header_buffer.h
     header_payload_demux.h
     kurtotic_equalizer_cc.h
     lfsr.h
@@ -72,7 +63,6 @@ install(FILES
     map_bb.h
     metric_type.h
     modulate_vector.h
-    mpsk_receiver_cc.h
     mpsk_snr_est.h
     mpsk_snr_est_cc.h
     msk_timing_recovery_cc.h
@@ -82,14 +72,17 @@ install(FILES
     ofdm_equalizer_base.h
     ofdm_equalizer_simpledfe.h
     ofdm_equalizer_static.h
-    ofdm_frame_acquisition.h
     ofdm_frame_equalizer_vcvc.h
-    ofdm_frame_sink.h
-    ofdm_insert_preamble.h
-    ofdm_mapper_bcv.h
-    ofdm_sampler.h
     ofdm_serializer_vcc.h
     ofdm_sync_sc_cfb.h
+    header_format_base.h
+    header_format_default.h
+    header_format_counter.h
+    header_format_crc.h
+    header_format_ofdm.h
+    protocol_formatter_async.h
+    protocol_formatter_bb.h
+    protocol_parser_b.h
     packet_header_default.h
     packet_header_ofdm.h
     packet_headergenerator_bb.h
@@ -104,7 +97,9 @@ install(FILES
     simple_correlator.h
     simple_framer.h
     simple_framer_sync.h
-    header_payload_demux.h
+    interpolating_resampler_type.h
+    symbol_sync_cc.h
+    symbol_sync_ff.h
+    timing_error_detector_type.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/digital
-    COMPONENT "digital_devel"
 )

@@ -87,8 +87,6 @@ gnuradio.blocks
 .. autoblock:: gnuradio.blocks.max_ss
 .. autoblock:: gnuradio.blocks.message_burst_source
 .. autoblock:: gnuradio.blocks.message_debug
-.. autoblock:: gnuradio.blocks.message_sink
-.. autoblock:: gnuradio.blocks.message_source
 .. autoblock:: gnuradio.blocks.message_strobe
 .. autoblock:: gnuradio.blocks.message_strobe_random
 .. autoblock:: gnuradio.blocks.min_ff
@@ -185,6 +183,7 @@ gnuradio.blocks
 .. autoblock:: gnuradio.blocks.tagged_stream_mux
 .. autoblock:: gnuradio.blocks.tagged_stream_to_pdu
 .. autoblock:: gnuradio.blocks.tags_strobe
+.. autoblock:: gnuradio.blocks.tcp_server_sink
 .. autoblock:: gnuradio.blocks.threshold_ff
 .. autoblock:: gnuradio.blocks.throttle
 .. autoblock:: gnuradio.blocks.transcendental

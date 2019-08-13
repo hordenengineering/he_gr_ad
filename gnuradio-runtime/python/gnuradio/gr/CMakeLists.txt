@@ -22,17 +22,14 @@ include(GrPython)
 
 GR_PYTHON_INSTALL(FILES
     __init__.py
+    exceptions.py
     tag_utils.py
     packet_utils.py
     gateway.py
-    gr_threading.py
-    gr_threading_23.py
-    gr_threading_24.py
     hier_block2.py
     top_block.py
     pubsub.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/gr
-    COMPONENT "runtime_python"
 )
 
 ########################################################################
@@ -44,11 +41,16 @@ if(ENABLE_TESTING)
   set(GR_TEST_PYTHON_DIRS
     ${CMAKE_BINARY_DIR}/gruel/src/python
     ${CMAKE_BINARY_DIR}/gnuradio-runtime/python
+    ${CMAKE_BINARY_DIR}/gnuradio-runtime/swig
+    ${CMAKE_BINARY_DIR}/gr-blocks/swig	
+    ${CMAKE_BINARY_DIR}/gr-fft/swig		
+    ${CMAKE_BINARY_DIR}/gr-filter/swig		
+    ${CMAKE_BINARY_DIR}/gr-analog/swig	
     )
   include(GrTest)
   file(GLOB py_qa_test_files "qa_*.py")
   foreach(py_qa_test_file ${py_qa_test_files})
     get_filename_component(py_qa_test_name ${py_qa_test_file} NAME_WE)
-    GR_ADD_TEST(${py_qa_test_name} ${QA_PYTHON_EXECUTABLE} ${PYTHON_DASH_B} ${py_qa_test_file})
+    GR_ADD_TEST(${py_qa_test_name} ${QA_PYTHON_EXECUTABLE} -B ${py_qa_test_file})
   endforeach(py_qa_test_file)
 endif(ENABLE_TESTING)

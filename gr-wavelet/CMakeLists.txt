@@ -1,4 +1,4 @@
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012,2019 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -37,49 +37,10 @@ GR_REGISTER_COMPONENT("gr-wavelet" ENABLE_GR_WAVELET
     GSL_FOUND
 )
 
-GR_SET_GLOBAL(GR_WAVELET_INCLUDE_DIRS
-    ${CMAKE_CURRENT_SOURCE_DIR}/lib
-    ${CMAKE_CURRENT_SOURCE_DIR}/include
-)
-
 ########################################################################
 # Begin conditional configuration
 ########################################################################
 if(ENABLE_GR_WAVELET)
-
-########################################################################
-# Setup CPack components
-########################################################################
-include(GrPackage)
-CPACK_SET(CPACK_COMPONENT_GROUP_WAVELET_DESCRIPTION "GNU Radio Wavelet Blocks")
-
-CPACK_COMPONENT("wavelet_runtime"
-    GROUP        "WAVELET"
-    DISPLAY_NAME "Runtime"
-    DESCRIPTION  "Runtime"
-    DEPENDS      "runtime_runtime"
-)
-
-CPACK_COMPONENT("wavelet_devel"
-    GROUP        "WAVELET"
-    DISPLAY_NAME "Development"
-    DESCRIPTION  "C++ headers, package config, import libraries"
-    DEPENDS      "runtime_devel"
-)
-
-CPACK_COMPONENT("wavelet_python"
-    GROUP        "WAVELET"
-    DISPLAY_NAME "Python"
-    DESCRIPTION  "Python modules for runtime; GRC xml files"
-    DEPENDS      "runtime_python;wavelet_runtime"
-)
-
-CPACK_COMPONENT("wavelet_swig"
-    GROUP        "WAVELET"
-    DISPLAY_NAME "SWIG"
-    DESCRIPTION  "SWIG development .i files"
-    DEPENDS      "runtime_swig;wavelet_python;wavelet_devel"
-)
 
 ########################################################################
 # Add subdirectories
@@ -89,10 +50,7 @@ add_subdirectory(lib)
 if(ENABLE_PYTHON)
     add_subdirectory(swig)
     add_subdirectory(python/wavelet)
-#    add_subdirectory(grc)
 endif(ENABLE_PYTHON)
-#add_subdirectory(examples)
-#add_subdirectory(doc)
 
 ########################################################################
 # Create Pkg Config File
@@ -105,7 +63,6 @@ configure_file(
 install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-wavelet.pc
     DESTINATION ${GR_LIBRARY_DIR}/pkgconfig
-    COMPONENT "wavelet_devel"
 )
 
 endif(ENABLE_GR_WAVELET)

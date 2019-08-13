@@ -1,4 +1,4 @@
-# Copyright 2013 Free Software Foundation, Inc.
+# Copyright 2013,2019 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -23,16 +23,8 @@
 include(GrPython)
 include(GrSwig)
 
-set(GR_SWIG_INCLUDE_DIRS
-    ${GR_ZEROMQ_INCLUDE_DIRS}
-    ${GNURADIO_RUNTIME_SWIG_INCLUDE_DIRS}
-    ${Boost_INCLUDE_DIRS}
-    ${ZEROMQ_INCLUDE_DIRS}
-)
-
-if(ENABLE_GR_CTRLPORT)
-  list(APPEND GR_SWIG_FLAGS "-DGR_CTRLPORT")
-endif(ENABLE_GR_CTRLPORT)
+set(GR_SWIG_INCLUDE_DIRS $<TARGET_PROPERTY:runtime_swig,INCLUDE_DIRECTORIES>)
+set(GR_SWIG_TARGET_DEPS runtime_swig)
 
 set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/zeromq_swig_doc.i)
 set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include/gnuradio/zeromq)
@@ -44,7 +36,6 @@ GR_SWIG_MAKE(zeromq_swig zeromq_swig.i)
 GR_SWIG_INSTALL(
     TARGETS zeromq_swig
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/zeromq
-    COMPONENT "zeromq_python"
 )
 
 install(
@@ -52,5 +43,4 @@ install(
     zeromq_swig.i
     ${CMAKE_CURRENT_BINARY_DIR}/zeromq_swig_doc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
-    COMPONENT "zeromq_swig"
 )

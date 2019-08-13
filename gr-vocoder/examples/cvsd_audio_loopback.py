@@ -20,6 +20,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import division
+from __future__ import unicode_literals
 from gnuradio import gr
 from gnuradio import audio
 from gnuradio import blocks
@@ -43,28 +45,28 @@ def build_graph():
     s2f = blocks.short_to_float()
     decim = filter.rational_resampler_fff(1, 8)
 
-    sink_scale = blocks.multiply_const_ff(1.0/scale_factor)
+    sink_scale = blocks.multiply_const_ff(1.0 / scale_factor)
     sink = audio.sink(sample_rate, "plughw:0,0")
 
     tb.connect(src, src_scale, interp, f2s, enc)
     tb.connect(enc, dec, s2f, decim, sink_scale, sink)
 
     if 0: # debug
-        tb.conect(src, blocks.file_sink(gr.sizeof_float, "source.dat"))
-        tb.conect(src_scale, blocks.file_sink(gr.sizeof_float, "src_scale.dat"))
-        tb.conect(interp, blocks.file_sink(gr.sizeof_float, "interp.dat"))
-        tb.conect(f2s, blocks.file_sink(gr.sizeof_short, "f2s.dat"))
-        tb.conect(enc, blocks.file_sink(gr.sizeof_char,  "enc.dat"))
-        tb.conect(dec, blocks.file_sink(gr.sizeof_short, "dec.dat"))
-        tb.conect(s2f, blocks.file_sink(gr.sizeof_float, "s2f.dat"))
-        tb.conect(decim, blocks.file_sink(gr.sizeof_float, "decim.dat"))
-        tb.conect(sink_scale, blocks.file_sink(gr.sizeof_float, "sink_scale.dat"))
+        tb.connect(src, blocks.file_sink(gr.sizeof_float, "source.dat"))
+        tb.connect(src_scale, blocks.file_sink(gr.sizeof_float, "src_scale.dat"))
+        tb.connect(interp, blocks.file_sink(gr.sizeof_float, "interp.dat"))
+        tb.connect(f2s, blocks.file_sink(gr.sizeof_short, "f2s.dat"))
+        tb.connect(enc, blocks.file_sink(gr.sizeof_char,  "enc.dat"))
+        tb.connect(dec, blocks.file_sink(gr.sizeof_short, "dec.dat"))
+        tb.connect(s2f, blocks.file_sink(gr.sizeof_float, "s2f.dat"))
+        tb.connect(decim, blocks.file_sink(gr.sizeof_float, "decim.dat"))
+        tb.connect(sink_scale, blocks.file_sink(gr.sizeof_float, "sink_scale.dat"))
 
     return tb
 
 if __name__ == '__main__':
     tb = build_graph()
     tb.start()
-    raw_input ('Press Enter to exit: ')
+    input ('Press Enter to exit: ')
     tb.stop()
     tb.wait()

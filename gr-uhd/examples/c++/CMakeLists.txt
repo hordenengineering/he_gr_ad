@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2019 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -18,20 +18,6 @@
 # Boston, MA 02110-1301, USA.
 
 ########################################################################
-# Setup the include and linker paths
-########################################################################
-include_directories(
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    ${GR_UHD_INCLUDE_DIRS}
-    ${GNURADIO_RUNTIME_INCLUDE_DIRS}
-    ${Boost_INCLUDE_DIRS}
-    ${UHD_INCLUDE_DIRS}
-)
-
-link_directories(${UHD_LIBRARY_DIRS})
-link_directories(${Boost_LIBRARY_DIRS})
-
-########################################################################
 # Build executable
 ########################################################################
 add_executable(tags_demo tags_demo.cc)
@@ -40,5 +26,4 @@ target_link_libraries(tags_demo gnuradio-uhd)
 INSTALL(TARGETS
     tags_demo
     DESTINATION ${GR_PKG_UHD_EXAMPLES_DIR}
-    COMPONENT "uhd_examples"
 )

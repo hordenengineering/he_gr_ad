@@ -26,32 +26,33 @@
 #include <gnuradio/digital/hdlc_deframer_bp.h>
 
 namespace gr {
-  namespace digital {
+namespace digital {
 
-    class hdlc_deframer_bp_impl : public hdlc_deframer_bp
-    {
-     private:
-        size_t d_length_min;
-        size_t d_length_max;
-        size_t d_ones;
-        size_t d_bytectr;
-        size_t d_bitctr;
-        unsigned char *d_pktbuf;
+class hdlc_deframer_bp_impl : public hdlc_deframer_bp
+{
+private:
+    size_t d_length_min;
+    size_t d_length_max;
+    size_t d_ones;
+    size_t d_bytectr;
+    size_t d_bitctr;
+    unsigned char* d_pktbuf;
 
-        unsigned int crc_ccitt(unsigned char *data, size_t len);
+    const pmt::pmt_t d_port;
 
-     public:
-      hdlc_deframer_bp_impl(int length_min, int length_max);
-      ~hdlc_deframer_bp_impl();
+    unsigned int crc_ccitt(unsigned char* data, size_t len);
 
-      // Where all the action really happens
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
-    };
+public:
+    hdlc_deframer_bp_impl(int length_min, int length_max);
+    ~hdlc_deframer_bp_impl();
 
-  } // namespace digital
+    // Where all the action really happens
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
+
+} // namespace digital
 } // namespace gr
 
 #endif /* INCLUDED_DIGITAL_HDLC_DEFRAMER_BP_IMPL_H */
-

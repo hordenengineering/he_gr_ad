@@ -42,6 +42,7 @@ install(FILES
     dvbt_config.h
     dvbs2_config.h
     dvbt2_config.h
+    catv_config.h
     dvb_bbheader_bb.h
     dvb_bbscrambler_bb.h
     dvb_bch_bb.h
@@ -81,5 +82,4 @@ install(FILES
     catv_trellis_enc_bb.h
 
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/dtv
-    COMPONENT "dtv_devel"
 )

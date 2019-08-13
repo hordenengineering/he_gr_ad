@@ -33,10 +33,6 @@
 #include <AudioToolbox/AudioToolbox.h>
 #include <AudioUnit/AudioUnit.h>
 
-namespace gr {
-namespace audio {
-namespace osx {
-
 // Check the version of MacOSX being used
 #ifdef __APPLE_CC__
 #include <AvailabilityMacros.h>
@@ -50,19 +46,19 @@ namespace osx {
 
 // helper function to print an ASBD
 
-extern std::ostream& GR_AUDIO_API
-operator<<
-(std::ostream& s,
- const AudioStreamBasicDescription& asbd);
+std::ostream& GR_AUDIO_API operator<<(std::ostream& s,
+                                      const AudioStreamBasicDescription& asbd);
+
+namespace gr {
+namespace audio {
+namespace osx {
 
 // returns the number of channels for the provided AudioDeviceID,
 // input and/or output depending on if the pointer is valid.
 
-extern void GR_AUDIO_API
-get_num_channels_for_audio_device_id
-(AudioDeviceID ad_id,
- UInt32* n_input,
- UInt32* n_output);
+void GR_AUDIO_API get_num_channels_for_audio_device_id(AudioDeviceID ad_id,
+                                                       UInt32* n_input,
+                                                       UInt32* n_output);
 
 // search all known audio devices, input or output, for all that
 // match the provided device_name string (in part or in whole).
@@ -70,12 +66,10 @@ get_num_channels_for_audio_device_id
 // matching names.  If the device name is empty, then match all
 // input or output devices.
 
-extern void GR_AUDIO_API
-find_audio_devices
-(const std::string& device_name,
- bool is_input,
- std::vector < AudioDeviceID >* all_ad_ids,
- std::vector < std::string >* all_names);
+void GR_AUDIO_API find_audio_devices(const std::string& device_name,
+                                     bool is_input,
+                                     std::vector<AudioDeviceID>* all_ad_ids,
+                                     std::vector<std::string>* all_names);
 
 } /* namespace osx */
 } /* namespace audio */

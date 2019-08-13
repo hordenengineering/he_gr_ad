@@ -21,6 +21,10 @@
 """
 Display numbers as strings using engineering notation.
 """
+from __future__ import unicode_literals
+
+import six
+
 
 scale_factor = {}
 scale_factor['E'] = 1e18
@@ -36,39 +40,42 @@ scale_factor['p'] = 1e-12
 scale_factor['f'] = 1e-15
 scale_factor['a'] = 1e-18
 
-def num_to_str (n):
+def num_to_str (n, precision=6):
     '''Convert a number to a string in engineering notation.  E.g., 5e-9 -> 5n'''
     m = abs(n)
+    format_spec = '%.' + repr(int(precision)) + 'g'
     if m >= 1e9:
-        return "%gG" % (n * 1e-9)
+        return '%sG' % float(format_spec % (n * 1e-9))
     elif m >= 1e6:
-        return "%gM" % (n * 1e-6)
+        return '%sM' % float(format_spec % (n * 1e-6))
     elif m >= 1e3:
-        return "%gk" % (n * 1e-3)
+        return '%sk' % float(format_spec % (n * 1e-3))
     elif m >= 1:
-        return "%g" % (n)
+        return '%s' % float(format_spec % (n))
     elif m >= 1e-3:
-        return "%gm" % (n * 1e3)
+        return '%sm' % float(format_spec % (n * 1e3))
     elif m >= 1e-6:
-        return "%gu" % (n * 1e6)        # where's that mu when you need it (unicode?)
+        return '%su' % float(format_spec % (n * 1e6))
     elif m >= 1e-9:
-        return "%gn" % (n * 1e9)
+        return '%sn' % float(format_spec % (n * 1e9))
     elif m >= 1e-12:
-        return "%gp" % (n * 1e12)
+        return '%sp' % float(format_spec % (n * 1e12))
     elif m >= 1e-15:
-        return "%gf" % (n * 1e15)
+        return '%sf' % float(format_spec % (n * 1e15))
     else:
-        return "%g" % (n)
+        return '%s' % float(format_spec % (n))
 
 
 def str_to_num (value):
     '''Convert a string in engineering notation to a number.  E.g., '15m' -> 15e-3'''
     try:
+        if not isinstance(value, six.string_types):
+            raise TypeError("Value must be a string")
         scale = 1.0
         suffix = value[-1]
-        if scale_factor.has_key (suffix):
+        if suffix in scale_factor:
             return float (value[0:-1]) * scale_factor[suffix]
         return float (value)
-    except:
-        raise RuntimeError (
+    except (TypeError, KeyError, ValueError):
+        raise ValueError (
             "Invalid engineering notation value: %r" % (value,))

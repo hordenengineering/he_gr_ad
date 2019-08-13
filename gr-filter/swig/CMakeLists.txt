@@ -1,4 +1,4 @@
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012,2019 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -23,17 +23,8 @@
 include(GrPython)
 include(GrSwig)
 
-set(GR_SWIG_INCLUDE_DIRS
-    ${GR_FILTER_INCLUDE_DIRS}
-    ${GR_FFT_INCLUDE_DIRS}
-    ${GNURADIO_RUNTIME_SWIG_INCLUDE_DIRS}
-    ${Boost_INCLUDE_DIRS}
-    ${FFTW3F_INCLUDE_DIRS}
-)
-
-if(ENABLE_GR_CTRLPORT)
-  list(APPEND GR_SWIG_FLAGS "-DGR_CTRLPORT")
-endif(ENABLE_GR_CTRLPORT)
+set(GR_SWIG_INCLUDE_DIRS $<TARGET_PROPERTY:runtime_swig,INCLUDE_DIRECTORIES>)
+set(GR_SWIG_TARGET_DEPS runtime_swig)
 
 # FIXME: rename to filter_swig_doc.i when gnuradio-runtime is updated
 set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/gr_filter_swig_doc.i)
@@ -42,7 +33,6 @@ set(GR_SWIG_DOC_DIRS
     ${CMAKE_CURRENT_BINARY_DIR}/../include/gnuradio/filter
 )
 set(GR_SWIG_DOCS_TARGET_DEPS runtime_swig_swig_doc)
-set(GR_SWIG_TARGET_DEPS filter_generated_includes)
 set(GR_SWIG_LIBRARIES gnuradio-filter gnuradio-fft)
 
 GR_SWIG_MAKE(filter_swig filter_swig.i)
@@ -50,7 +40,6 @@ GR_SWIG_MAKE(filter_swig filter_swig.i)
 GR_SWIG_INSTALL(
     TARGETS filter_swig
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/filter
-    COMPONENT "filter_python"
 )
 
 install(
@@ -58,5 +47,4 @@ install(
     filter_swig.i
     ${CMAKE_CURRENT_BINARY_DIR}/gr_filter_swig_doc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
-    COMPONENT "filter_swig"
 )
