@@ -23,19 +23,31 @@
 include(GrBoost)
 find_library(IIO_LIBRARIES iio)
 find_path(IIO_INCLUDE_DIRS iio.h)
-find_library(AD9361_LIBRARIES ad9361)
-find_path(AD9361_INCLUDE_DIRS ad9361.h)
+if(IIO_LIBRARIES)
+	set(IIO_FOUND TRUE)
+endif(IIO_LIBRARIES)
+set(GR_IIO_DEPENDENCIES
+    Boost_FOUND
+    ENABLE_GNURADIO_RUNTIME
+    ENABLE_GR_BLOCKS
+		ENABLE_GR_ANALOG
+    ENABLE_VOLK
+    IIO_FOUND
+    )
+if(NOT LIBAD9361_FOUND STREQUAL "OFF")
+    find_library(AD9361_LIBRARIES ad9361)
+    find_path(AD9361_INCLUDE_DIRS ad9361.h)
+    if(AD9361_LIBRARIES)
+        set(LIBAD9361_FOUND TRUE)
+				list(APPEND GR_IIO_DEPENDENCIES LIBAD9361_FOUND)
+    endif(AD9361_LIBRARIES)
+endif()
 
 ########################################################################
 # Register component
 ########################################################################
 include(GrComponent)
-GR_REGISTER_COMPONENT("gr-iio" ENABLE_GR_IIO
-    Boost_FOUND
-    ENABLE_GNURADIO_RUNTIME
-    ENABLE_GR_BLOCKS
-    ENABLE_VOLK
-)
+GR_REGISTER_COMPONENT("gr-iio" ENABLE_GR_IIO ${GR_IIO_DEPENDENCIES})
 
 SET(GR_PKG_IIO_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/iio)
 

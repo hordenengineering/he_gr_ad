@@ -25,7 +25,7 @@ add_library(gnuradio-iio
   device_sink_impl.cc
   attr_source_impl.cc
   attr_sink_impl.cc
-)  
+)
 
 target_link_libraries(gnuradio-iio PUBLIC
   gnuradio-runtime
@@ -39,7 +39,7 @@ target_include_directories(gnuradio-iio
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
   )
 
-if(AD9361_LIBRARIES)
+if(LIBAD9361_FOUND)
   target_sources(gnuradio-iio PRIVATE
     fmcomms2_source_impl.cc
     fmcomms2_sink_impl.cc
@@ -50,7 +50,7 @@ if(AD9361_LIBRARIES)
   )
   target_link_libraries(gnuradio-iio PUBLIC ${AD9361_LIBRARIES})
   target_include_directories(gnuradio-iio PUBLIC ${AD9361_INCLUDE_DIRS})
-endif(AD9361_LIBRARIES)
+endif(LIBAD9361_FOUND)
 
 #Add Windows DLL resource file if using MSVC
 if(MSVC)
@@ -69,4 +69,3 @@ endif(MSVC)
 if(BUILD_SHARED_LIBS)
   GR_LIBRARY_FOO(gnuradio-iio IIO)
 endif()
-
