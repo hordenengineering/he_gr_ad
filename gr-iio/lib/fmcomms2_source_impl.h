@@ -35,44 +35,52 @@ namespace iio {
 class fmcomms2_source_impl : public fmcomms2_source, public device_source_impl
 {
 private:
-	std::vector<std::string>
-	get_channels_vector(bool ch1_en, bool ch2_en, bool ch3_en, bool ch4_en);
+    std::vector<std::string>
+    get_channels_vector(bool ch1_en, bool ch2_en, bool ch3_en, bool ch4_en);
+    boost::thread overflow_thd;
+    void check_overflow(void);
 
 public:
-	fmcomms2_source_impl(struct iio_context *ctx,
-			     bool destroy_ctx,
-			     unsigned long long frequency,
-			     unsigned long samplerate,
-			     unsigned long bandwidth,
-			     bool ch1_en,
-			     bool ch2_en,
-			     bool ch3_en,
-			     bool ch4_en,
-			     unsigned long buffer_size,
-			     bool quadrature,
-			     bool rfdc,
-			     bool bbdc,
-			     const char *gain1,
-			     double gain1_value,
-			     const char *gain2,
-			     double gain2_value,
-			     const char *rf_port_select,
-			     const char *filter,
-			     bool auto_filter);
+    fmcomms2_source_impl(struct iio_context* ctx,
+                         bool destroy_ctx,
+                         unsigned long long frequency,
+                         unsigned long samplerate,
+                         unsigned long bandwidth,
+                         bool ch1_en,
+                         bool ch2_en,
+                         bool ch3_en,
+                         bool ch4_en,
+                         unsigned long buffer_size,
+                         bool quadrature,
+                         bool rfdc,
+                         bool bbdc,
+                         const char* gain1,
+                         double gain1_value,
+                         const char* gain2,
+                         double gain2_value,
+                         const char* rf_port_select,
+                         const char* filter_source,
+                         const char* filter_filename,
+                         float Fpass,
+                         float Fstop);
 
-	void set_params(unsigned long long frequency,
-			unsigned long samplerate,
-			unsigned long bandwidth,
-			bool quadrature,
-			bool rfdc,
-			bool bbdc,
-			const char *gain1,
-			double gain1_value,
-			const char *gain2,
-			double gain2_value,
-			const char *rf_port_select,
-			const char *filter,
-			bool auto_filter);
+    ~fmcomms2_source_impl();
+
+    void set_params(unsigned long long frequency,
+                    unsigned long samplerate,
+                    unsigned long bandwidth,
+                    bool quadrature,
+                    bool rfdc,
+                    bool bbdc,
+                    const char* gain1,
+                    double gain1_value,
+                    const char* gain2,
+                    double gain2_value,
+                    const char* rf_port_select,
+                    const char* filter_source,
+                    const char* filter_filename,
+                    float Fpass,
+                    float Fstop);
 };
 
 } // namespace iio

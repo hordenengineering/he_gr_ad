@@ -16,7 +16,7 @@ parameters:
 -   id: samplerate
     label: Sample Rate
     dtype: int
-    default: 2084000
+    default: samp_rate
 
 -   id: bandwidth
     label: RF Bandwidth
@@ -68,17 +68,41 @@ parameters:
     default: 10.0
     hide: ${ ('part' if tx2_en else 'all') }
 
+-   id: filter_source
+    category: Filter
+    label: Filter Configuration
+    dtype: enum
+    default: "'Auto'"
+    options: ["'Off'", "'Auto'", "'File'", "'Design'"]
+    option_labels: ['Off', 'Auto', 'File', 'Design']
+
 -   id: filter
+    category: Filter
     label: Filter
     dtype: file_open
     default: ''
+    hide: ${ ('none' if filter_source == "'File'" else 'all') }
 
--   id: auto_filter
-    label: Filter Auto
-    dtype: bool
-    default: 'True'
-    options: ['False', 'True']
-    option_labels: ['False', 'True']
+-   id: fpass
+    category: Filter
+    label: Fpass (Hz)
+    dtype: float
+    default: samp_rate/4
+    hide: ${ ('none' if filter_source == "'Design'" else 'all') }
+
+-   id: fstop
+    category: Filter
+    label: Fstop (Hz)
+    dtype: float
+    default: samp_rate/3
+    hide: ${ ('none' if filter_source == "'Design'" else 'all') }
+
+-   id: bandwidth
+    category: Filter
+    label: RF Bandwidth (Hz)
+    dtype: int
+    default: 20000000
+    hide: ${ ('all' if filter_source == "'File'" else 'none') }
 
 inputs:
 -   domain: stream
@@ -87,15 +111,19 @@ inputs:
 
 asserts:
 - ${ sum([tx1_en, tx2_en]) > 0 }
-- ${ ((samplerate>=2084000) or (len(filter)>0) or auto_filter) }
+- ${ ((samplerate>=2084000) or (filter_source!="'Off'")) }
+- ${ ((filter_source!="'File'") or (len(filter)>0)) }
 - ${ ((samplerate<=61440000) and (samplerate>=520833)) }
-- ${ ((bandwidth<=52000000) and (bandwidth>=200000)) }
+- ${ ((bandwidth<=40000000) and (bandwidth>=200000)) }
 - ${ ((frequency<=6000000000) and (frequency>=47000000)) }
+- ${ ((filter_source!="'Design'")  or (fpass<=samplerate)) }
+- ${ ((filter_source!="'Design'")  or (fstop<=samplerate)) }
+- ${ ((filter_source!="'Design'")  or (fstop>fpass)) }
 
 templates:
     imports: from gnuradio import iio
-    make: iio.fmcomms2_sink_f32c(${uri}, ${frequency}, ${samplerate}, ${bandwidth}, ${tx1_en}, ${tx2_en}, ${buffer_size}, ${cyclic}, ${rf_port_select}, ${attenuation1}, ${attenuation2}, ${filter}, ${auto_filter})
+    make: iio.fmcomms2_sink_f32c(${uri}, ${frequency}, ${samplerate}, ${bandwidth}, ${tx1_en}, ${tx2_en}, ${buffer_size}, ${cyclic}, ${rf_port_select}, ${attenuation1}, ${attenuation2}, ${filter_source}, ${filter}, ${Fpass}, ${Fstop})
     callbacks:
-      - set_params(${frequency}, ${samplerate}, ${bandwidth}, ${tx1_en}, ${tx2_en}, ${buffer_size}, ${cyclic}, ${rf_port_select}, ${attenuation1}, ${attenuation2}, ${filter}, ${auto_filter})
+      - set_params(${frequency}, ${samplerate}, ${bandwidth}, ${tx1_en}, ${tx2_en}, ${buffer_size}, ${cyclic}, ${rf_port_select}, ${attenuation1}, ${attenuation2}, ${filter_source}, ${filter}, ${Fpass}, ${Fstop})
 
 file_format: 1

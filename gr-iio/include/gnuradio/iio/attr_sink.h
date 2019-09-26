@@ -23,32 +23,36 @@
 #ifndef INCLUDED_IIO_ATTR_SINK_H
 #define INCLUDED_IIO_ATTR_SINK_H
 
-#include <gnuradio/iio/api.h>
 #include <gnuradio/block.h>
+#include <gnuradio/iio/api.h>
 
 namespace gr {
 namespace iio {
 
 /*!
- * \brief Sink block for writing IIO attributes
+ * \brief <+description of block+>
  * \ingroup iio
  *
  */
 class IIO_API attr_sink : virtual public gr::block
 {
 public:
-	typedef boost::shared_ptr<attr_sink> sptr;
+    typedef boost::shared_ptr<attr_sink> sptr;
 
-	/*!
-	 * \brief Return a shared_ptr to a new instance of iio::attr_sink.
-	 *
-	 * To avoid accidental use of raw pointers, iio::attr_sink's
-	 * constructor is in a private implementation
-	 * class. iio::attr_sink::make is the public interface for
-	 * creating new instances.
-	 */
-	static sptr make(const std::string& uri, const std::string& device,
-			 const std::string& channel, int type, bool output, bool required_enable);
+    /*!
+     * \brief Return a shared_ptr to a new instance of iio::attr_sink.
+     *
+     * To avoid accidental use of raw pointers, iio::attr_sink's
+     * constructor is in a private implementation
+     * class. iio::attr_sink::make is the public interface for
+     * creating new instances.
+     */
+    static sptr make(const std::string& uri,
+                     const std::string& device,
+                     const std::string& channel,
+                     int type,
+                     bool output,
+                     bool required_enable);
 };
 
 } // namespace iio

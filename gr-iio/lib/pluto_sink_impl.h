@@ -36,14 +36,16 @@ namespace iio {
 class pluto_sink_impl : public pluto_sink, public fmcomms2_sink_f32c
 {
 public:
-	explicit pluto_sink_impl(fmcomms2_sink::sptr block);
+    explicit pluto_sink_impl(fmcomms2_sink::sptr block);
 
-	void set_params(unsigned long long frequency,
-			unsigned long samplerate,
-			unsigned long bandwidth,
-			double attenuation,
-			const char *filter,
-			bool auto_filter);
+    void set_params(unsigned long long frequency,
+                    unsigned long samplerate,
+                    unsigned long bandwidth,
+                    double attenuation,
+                    const char* filter_source,
+                    const char* filter_filename,
+                    float Fpass,
+                    float Fstop);
 };
 
 } // namespace iio

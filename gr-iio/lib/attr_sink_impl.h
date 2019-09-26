@@ -34,28 +34,28 @@ namespace iio {
 class attr_sink_impl : public attr_sink
 {
 private:
-	std::string device;
-	std::string channel;
-	std::string uri;
-	int type;
-	bool output;
-	bool required_enable;
+    std::string device;
+    std::string channel;
+    std::string uri;
+    int type;
+    bool output;
+    bool required_enable;
 
 protected:
-	struct iio_context *ctx;
-	struct iio_device *dev;
-	struct iio_channel *chan;
+    struct iio_context* ctx;
+    struct iio_device* dev;
+    struct iio_channel* chan;
 
 public:
-	attr_sink_impl(const std::string& uri,
-		       const std::string& device,
-		       const std::string& channel,
-		       int type,
-		       bool output,
-		       bool required_enable);
-	~attr_sink_impl();
+    attr_sink_impl(const std::string& uri,
+                   const std::string& device,
+                   const std::string& channel,
+                   int type,
+                   bool output,
+                   bool required_enable);
+    ~attr_sink_impl();
 
-	void write_attribute(pmt::pmt_t pdu);
+    void write_attribute(pmt::pmt_t pdu);
 };
 
 } // namespace iio

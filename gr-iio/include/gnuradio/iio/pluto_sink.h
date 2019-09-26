@@ -23,8 +23,8 @@
 #ifndef INCLUDED_IIO_PLUTO_SINK_H
 #define INCLUDED_IIO_PLUTO_SINK_H
 
-#include <gnuradio/iio/api.h>
 #include <gnuradio/hier_block2.h>
+#include <gnuradio/iio/api.h>
 
 namespace gr {
 namespace iio {
@@ -36,24 +36,28 @@ namespace iio {
 class IIO_API pluto_sink : virtual public gr::hier_block2
 {
 public:
-	typedef boost::shared_ptr<pluto_sink> sptr;
+    typedef boost::shared_ptr<pluto_sink> sptr;
 
-	static sptr make(const std::string& uri,
-			 unsigned long long frequency,
-			 unsigned long samplerate,
-			 unsigned long bandwidth,
-			 unsigned long buffer_size,
-			 bool cyclic,
-			 double attenuation,
-			 const char *filter = "",
-			 bool auto_filter = true);
+    static sptr make(const std::string& uri,
+                     unsigned long long frequency,
+                     unsigned long samplerate,
+                     unsigned long bandwidth,
+                     unsigned long buffer_size,
+                     bool cyclic,
+                     double attenuation,
+                     const char* filter_source = "",
+                     const char* filter_filename = "",
+                     float Fpass = 0.0,
+                     float Fstop = 0.0);
 
-	virtual void set_params(unsigned long long frequency,
-				unsigned long samplerate,
-				unsigned long bandwidth,
-				double attenuation,
-				const char *filter = "",
-				bool auto_filter = true) = 0;
+    virtual void set_params(unsigned long long frequency,
+                            unsigned long samplerate,
+                            unsigned long bandwidth,
+                            double attenuation,
+                            const char* filter_source = "",
+                            const char* filter_filename = "",
+                            float Fpass = 0.0,
+                            float Fstop = 0.0) = 0;
 };
 
 } // namespace iio

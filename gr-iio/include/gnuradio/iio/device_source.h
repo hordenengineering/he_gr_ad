@@ -29,7 +29,7 @@
 #define DEFAULT_BUFFER_SIZE 0x8000
 
 extern "C" {
-	struct iio_context;
+struct iio_context;
 };
 
 namespace gr {
@@ -43,36 +43,37 @@ namespace iio {
 class IIO_API device_source : virtual public gr::sync_block
 {
 public:
-	typedef boost::shared_ptr<device_source> sptr;
+    typedef boost::shared_ptr<device_source> sptr;
 
-	/*!
-	 * \brief Return a shared_ptr to a new instance of iio::device.
-	 *
-	 * To avoid accidental use of raw pointers, iio::device's
-	 * constructor is in a private implementation
-	 * class. iio::device::make is the public interface for
-	 * creating new instances.
-	 */
-	static sptr make(const std::string& uri, const std::string& device,
-			 const std::vector<std::string>& channels,
-			 const std::string& device_phy,
-			 const std::vector<std::string>& params,
-			 unsigned int buffer_size = DEFAULT_BUFFER_SIZE,
-			 unsigned int decimation = 0);
+    /*!
+     * \brief Return a shared_ptr to a new instance of iio::device.
+     *
+     * To avoid accidental use of raw pointers, iio::device's
+     * constructor is in a private implementation
+     * class. iio::device::make is the public interface for
+     * creating new instances.
+     */
+    static sptr make(const std::string& uri,
+                     const std::string& device,
+                     const std::vector<std::string>& channels,
+                     const std::string& device_phy,
+                     const std::vector<std::string>& params,
+                     unsigned int buffer_size = DEFAULT_BUFFER_SIZE,
+                     unsigned int decimation = 0);
 
-	static sptr make_from(struct iio_context *ctx, const std::string& device,
-			      const std::vector<std::string>& channels,
-			      const std::string& device_phy,
-			      const std::vector<std::string>& params,
-			      unsigned int buffer_size = DEFAULT_BUFFER_SIZE,
-			      unsigned int decimation = 0);
+    static sptr make_from(struct iio_context* ctx,
+                          const std::string& device,
+                          const std::vector<std::string>& channels,
+                          const std::string& device_phy,
+                          const std::vector<std::string>& params,
+                          unsigned int buffer_size = DEFAULT_BUFFER_SIZE,
+                          unsigned int decimation = 0);
 
-	virtual void set_buffer_size(unsigned int buffer_size) = 0;
-	virtual void set_timeout_ms(unsigned long timeout) = 0;
+    virtual void set_buffer_size(unsigned int buffer_size) = 0;
+    virtual void set_timeout_ms(unsigned long timeout) = 0;
 };
 
 } // namespace iio
 } // namespace gr
 
 #endif /* INCLUDED_IIO_DEVICE_SOURCE_H */
-

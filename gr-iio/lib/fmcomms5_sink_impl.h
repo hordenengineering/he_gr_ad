@@ -35,64 +35,64 @@ namespace iio {
 class fmcomms5_sink_impl : public fmcomms5_sink, public device_sink_impl
 {
 private:
-	bool cyclic;
-	unsigned long samplerate;
-	struct iio_device *phy2;
+    bool cyclic;
+    unsigned long samplerate;
+    struct iio_device* phy2;
 
-	static void set_params(struct iio_device *phy_device,
-			       unsigned long long frequency,
-			       unsigned long samplerate,
-			       unsigned long bandwidth,
-			       const char *rf_port_select,
-			       double attenuation1,
-			       double attenuation2);
+    static void set_params(struct iio_device* phy_device,
+                           unsigned long long frequency,
+                           unsigned long samplerate,
+                           unsigned long bandwidth,
+                           const char* rf_port_select,
+                           double attenuation1,
+                           double attenuation2);
 
-	std::vector<std::string> get_channels_vector(bool ch1_en,
-			bool ch2_en,
-			bool ch3_en,
-			bool ch4_en,
-			bool ch5_en,
-			bool ch6_en,
-			bool ch7_en,
-			bool ch8_en);
+    std::vector<std::string> get_channels_vector(bool ch1_en,
+                                                 bool ch2_en,
+                                                 bool ch3_en,
+                                                 bool ch4_en,
+                                                 bool ch5_en,
+                                                 bool ch6_en,
+                                                 bool ch7_en,
+                                                 bool ch8_en);
 
 public:
-	fmcomms5_sink_impl(struct iio_context *ctx,
-			   bool destroy_ctx,
-			   unsigned long long frequency1,
-			   unsigned long long frequency2,
-			   unsigned long samplerate,
-			   unsigned long bandwidth,
-			   bool ch1_en,
-			   bool ch2_en,
-			   bool ch3_en,
-			   bool ch4_en,
-			   bool ch5_en,
-			   bool ch6_en,
-			   bool ch7_en,
-			   bool ch8_en,
-			   unsigned long buffer_size,
-			   bool cyclic,
-			   const char *rf_port_select,
-			   double attenuation1,
-			   double attenuation2,
-			   double attenuation3,
-			   double attenuation4,
-			   const char *filter);
+    fmcomms5_sink_impl(struct iio_context* ctx,
+                       bool destroy_ctx,
+                       unsigned long long frequency1,
+                       unsigned long long frequency2,
+                       unsigned long samplerate,
+                       unsigned long bandwidth,
+                       bool ch1_en,
+                       bool ch2_en,
+                       bool ch3_en,
+                       bool ch4_en,
+                       bool ch5_en,
+                       bool ch6_en,
+                       bool ch7_en,
+                       bool ch8_en,
+                       unsigned long buffer_size,
+                       bool cyclic,
+                       const char* rf_port_select,
+                       double attenuation1,
+                       double attenuation2,
+                       double attenuation3,
+                       double attenuation4,
+                       const char* filter);
 
-	int work(int noutput_items,
-		 gr_vector_const_void_star& input_items,
-		 gr_vector_void_star& output_items);
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
 
-	void set_params(unsigned long long frequency1,
-			unsigned long long frequency2,
-			unsigned long samplerate,
-			unsigned long bandwidth,
-			const char *rf_port_select,
-			double attenuation1,
-			double attenuation2,
-			double attenuation3,
-			double attenuation4);
+    void set_params(unsigned long long frequency1,
+                    unsigned long long frequency2,
+                    unsigned long samplerate,
+                    unsigned long bandwidth,
+                    const char* rf_port_select,
+                    double attenuation1,
+                    double attenuation2,
+                    double attenuation3,
+                    double attenuation4);
 };
 
 } // namespace iio

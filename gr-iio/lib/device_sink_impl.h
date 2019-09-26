@@ -34,37 +34,37 @@ namespace iio {
 class device_sink_impl : public device_sink
 {
 private:
-	void channel_write(const struct iio_channel *chn, const void *src, size_t len);
+    void channel_write(const struct iio_channel* chn, const void* src, size_t len);
 
 protected:
-	struct iio_context *ctx;
-	struct iio_device *dev, *phy;
-	struct iio_buffer *buf;
-	std::vector<struct iio_channel *> channel_list;
-	unsigned int interpolation;
-	unsigned int buffer_size;
-	bool destroy_ctx;
+    struct iio_context* ctx;
+    struct iio_device *dev, *phy;
+    struct iio_buffer* buf;
+    std::vector<struct iio_channel*> channel_list;
+    unsigned int buffer_size;
+    unsigned int interpolation;
+    bool destroy_ctx;
 
 public:
-	device_sink_impl(struct iio_context *ctx,
-			 bool destroy_ctx,
-			 const std::string& device,
-			 const std::vector<std::string>& channels,
-			 const std::string& device_phy,
-			 const std::vector<std::string>& params,
-			 unsigned int buffer_size = DEFAULT_BUFFER_SIZE,
-			 unsigned int interpolation = 0,
-			 bool cyclic = false);
-	~device_sink_impl();
+    device_sink_impl(struct iio_context* ctx,
+                     bool destroy_ctx,
+                     const std::string& device,
+                     const std::vector<std::string>& channels,
+                     const std::string& device_phy,
+                     const std::vector<std::string>& params,
+                     unsigned int buffer_size = DEFAULT_BUFFER_SIZE,
+                     unsigned int interpolation = 0,
+                     bool cyclic = false);
+    ~device_sink_impl();
 
-	void set_params(const std::vector<std::string>& params);
+    void set_params(const std::vector<std::string>& params);
 
-	// Where all the action really happens
-	int work(int noutput_items,
-		 gr_vector_const_void_star& input_items,
-		 gr_vector_void_star& output_items);
+    // Where all the action really happens
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
 
-	void forecast(int noutput_items, gr_vector_int& ninput_items_required);
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required);
 };
 
 } // namespace iio

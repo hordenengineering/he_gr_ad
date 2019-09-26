@@ -1,0 +1,5 @@
+find_library(IIO_LIBRARIES iio)
+find_path(IIO_INCLUDE_DIRS iio.h)
+if(IIO_LIBRARIES)
+	set(IIO_FOUND TRUE)
+endif(IIO_LIBRARIES)

@@ -32,7 +32,7 @@ class test_iio(gr_unittest.TestCase):
     def tearDown(self):
         self.tb = None
 
-    def test_import (self):
+    def test_import(self):
         """Just see if we can import the module...
         They may not have a IIO device connected, etc.  Don't try to run anything"""
         pass

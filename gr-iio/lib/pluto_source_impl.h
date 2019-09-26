@@ -35,21 +35,26 @@ namespace iio {
 
 class pluto_source_impl : public pluto_source, public fmcomms2_source_f32c
 {
+private:
+    // void update_rate(unsigned long samplerate)
+
 public:
-	explicit pluto_source_impl(fmcomms2_source::sptr block);
+    explicit pluto_source_impl(fmcomms2_source::sptr block);
 
-	static std::string get_uri();
+    static std::string get_uri();
 
-	void set_params(unsigned long long frequency,
-			unsigned long samplerate,
-			unsigned long bandwidth,
-			bool quadrature,
-			bool rfdc,
-			bool bbdc,
-			const char *gain,
-			double gain_value,
-			const char *filter,
-			bool auto_filter);
+    void set_params(unsigned long long frequency,
+                    unsigned long samplerate,
+                    unsigned long bandwidth,
+                    bool quadrature,
+                    bool rfdc,
+                    bool bbdc,
+                    const char* gain,
+                    double gain_value,
+                    const char* filter_source,
+                    const char* filter_filename,
+                    float Fpass,
+                    float Fstop);
 };
 
 } // namespace iio

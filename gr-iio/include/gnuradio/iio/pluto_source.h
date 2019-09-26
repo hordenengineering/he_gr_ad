@@ -23,8 +23,8 @@
 #ifndef INCLUDED_IIO_PLUTO_SOURCE_H
 #define INCLUDED_IIO_PLUTO_SOURCE_H
 
-#include <gnuradio/iio/api.h>
 #include <gnuradio/hier_block2.h>
+#include <gnuradio/iio/api.h>
 
 namespace gr {
 namespace iio {
@@ -36,27 +36,37 @@ namespace iio {
 class IIO_API pluto_source : virtual public gr::hier_block2
 {
 public:
-	typedef boost::shared_ptr<pluto_source> sptr;
+    typedef boost::shared_ptr<pluto_source> sptr;
 
-	static sptr make(const std::string& uri,
-			 unsigned long long frequency,
-			 unsigned long samplerate,
-			 unsigned long bandwidth,
-			 unsigned long buffer_size,
-			 bool quadrature, bool rfdc,
-			 bool bbdc,
-			 const char *gain,
-			 double gain_value,
-			 const char *filter = "",
-			 bool auto_filter = true);
+    static sptr make(const std::string& uri,
+                     unsigned long long frequency,
+                     unsigned long samplerate,
+                     unsigned long bandwidth,
+                     unsigned long buffer_size,
+                     bool quadrature,
+                     bool rfdc,
+                     bool bbdc,
+                     const char* gain,
+                     double gain_value,
+                     const char* filter_source = "",
+                     const char* filter_filename = "",
+                     float Fpass = 0.0,
+                     float Fstop = 0.0);
 
-	virtual void set_params(unsigned long long frequency,
-				unsigned long samplerate,
-				unsigned long bandwidth,
-				bool quadrature, bool rfdc, bool bbdc,
-				const char *gain, double gain_value,
-				const char *filter = "",
-				bool auto_filter = true) = 0;
+    // virtual void update_sample_rate(unsigned long samplerate) = 0;
+
+    virtual void set_params(unsigned long long frequency,
+                            unsigned long samplerate,
+                            unsigned long bandwidth,
+                            bool quadrature,
+                            bool rfdc,
+                            bool bbdc,
+                            const char* gain,
+                            double gain_value,
+                            const char* filter_source = "",
+                            const char* filter_filename = "",
+                            float Fpass = 0.0,
+                            float Fstop = 0.0) = 0;
 };
 } // namespace iio
 } // namespace gr
