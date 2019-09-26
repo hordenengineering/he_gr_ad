@@ -25,6 +25,8 @@ add_library(gnuradio-iio
   device_sink_impl.cc
   attr_source_impl.cc
   attr_sink_impl.cc
+  attr_updater_impl.cc
+  dds_control.cc
 )
 
 target_link_libraries(gnuradio-iio PUBLIC
