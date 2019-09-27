@@ -290,6 +290,7 @@ void fmcomms2_source_impl::set_params(unsigned long long frequency,
 {
     bool is_fmcomms4 = !iio_device_find_channel(phy, "voltage1", false);
     std::vector<std::string> params;
+    int ret;
 
     if (samplerate < MIN_RATE) {
         int ret;
@@ -328,7 +329,7 @@ void fmcomms2_source_impl::set_params(unsigned long long frequency,
         if (!load_fir_filter(filt, phy))
             throw std::runtime_error("Unable to load filter file");
     } else if (filt_config.compare("Design") == 0) {
-        int ret = ad9361_set_bb_rate_custom_filter_manual(
+        ret = ad9361_set_bb_rate_custom_filter_manual(
             phy, samplerate, Fpass, Fstop, bandwidth, bandwidth);
         if (ret) {
             throw std::runtime_error("Unable to set BB rate");
@@ -346,6 +347,13 @@ void fmcomms2_source_impl::set_params(unsigned long long frequency,
     params.push_back("in_voltage0_rf_port_select=" + boost::to_string(port_select));
 
     device_source_impl::set_params(params);
+    // Filters can only be disabled after the sample rate has been set
+    if (filt_config.compare("Off") == 0) {
+        ret = ad9361_set_trx_fir_enable(phy, false);
+        if (ret) {
+            throw std::runtime_error("Unable to disable fitlers");
+        }
+    }
 }
 
 } /* namespace iio */
