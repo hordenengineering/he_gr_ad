@@ -36,9 +36,12 @@ namespace gr {
 namespace iio {
 
 /*!
- * \brief <+description of block+>
- * \ingroup iio
- *
+* \brief Generic source for IIO drivers with buffered output channels
+* \ingroup iio
+*
+* \details
+* This block allows for streaming data from any IIO driver which has output
+* scan elements or buffered channels.
  */
 class IIO_API device_source : virtual public gr::sync_block
 {
@@ -48,10 +51,17 @@ public:
     /*!
      * \brief Return a shared_ptr to a new instance of iio::device.
      *
-     * To avoid accidental use of raw pointers, iio::device's
-     * constructor is in a private implementation
-     * class. iio::device::make is the public interface for
-     * creating new instances.
+     * \param uri  String of the context uri
+     * \param device  String of device name
+     * \param channels  Vector of strings of channels names
+     * \param device_phy String of phy device name where attribute updates are
+     *        applied
+     * \param params  Vector of strings of attributes to set in form:
+     *        "<attribute name>=<value to set>,<attribute name>=<value to set>"
+     * \param buffer_size Integer number of samples to be put into each IIO
+     *        buffered passed to hardware.
+     * \param decimation Integer number of sample to remove from received
+     *        data buffers between successive samples
      */
     static sptr make(const std::string& uri,
                      const std::string& device,

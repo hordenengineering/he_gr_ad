@@ -30,9 +30,15 @@ namespace gr {
 namespace iio {
 
 /*!
- * \brief <+description of block+>
+ * \brief Generic writer for attributes of IIO devices
  * \ingroup iio
  *
+ * \details
+ * This block allow for updating of any IIO attribute that is writable. This
+ * includes channel, device, device buffer, device debug, and direct register
+ * attributes. All messages must be a pmt dictionary where the key is the
+ * attribute to update and the value is the value to be written. Messages can
+ * be an array of dictionaries or a single dictionary.
  */
 class IIO_API attr_sink : virtual public gr::block
 {
@@ -42,10 +48,19 @@ public:
     /*!
      * \brief Return a shared_ptr to a new instance of iio::attr_sink.
      *
-     * To avoid accidental use of raw pointers, iio::attr_sink's
-     * constructor is in a private implementation
-     * class. iio::attr_sink::make is the public interface for
-     * creating new instances.
+     * \param uri String of context uri
+     * \param device String of device name
+     * \param channel String of device name
+     * \param type Integer determining attribute type:
+     *        0: Channel attribute
+     *        1: Device attribute
+     *        2: Device buffer attribute
+     *        3: Device debug attribute
+     *        4: Direct register access
+     * \param output Boolean when True if channel attribute is an output
+     * \param required_enable Boolean when True if an extra register_access
+     *        attribute write is required for use a register. This is required
+     *        for MathWorks generated IP.
      */
     static sptr make(const std::string& uri,
                      const std::string& device,

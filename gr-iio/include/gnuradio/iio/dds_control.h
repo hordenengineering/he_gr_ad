@@ -30,9 +30,14 @@ namespace gr {
 namespace iio {
 
 /*!
- * \brief <+description of block+>
+ * \brief Control block for DDSs which are available in controlling FPGAs of
+ *        certain IIO drivers
  * \ingroup iio
  *
+ * \details
+ * This block allow for control of multiple direct digital synthesizers (DDS)
+ * to create transmit tones. The are available in the generic AXI DAC driver
+ * from Analog Devices.
  */
 class IIO_API dds_control : virtual public gr::block
 {
@@ -42,10 +47,15 @@ public:
     /*!
      * \brief Return a shared_ptr to a new instance of iio::dds_control.
      *
-     * To avoid accidental use of raw pointers, iio::dds_control's
-     * constructor is in a private implementation
-     * class. iio::dds_control::make is the public interface for
-     * creating new instances.
+     * \param uri  String of the context uri
+     * \param enabled  Vector of integers where individual indexes represent
+     *                 specific DDSs and when not zero the are enabled
+     * \param frequencies  Vector of long integers where individual indexes
+     *                 represent specific DDS frequencies in Hz
+     * \param phases  Vector of floats where individual indexes represent
+     *                specific DDS phase in degrees
+     * \param scales  Vector of floats where individual indexes represent
+     *                specific DDS scale from 0 to 1
      */
     static sptr make(const std::string& uri,
                      std::vector<int> enabled,

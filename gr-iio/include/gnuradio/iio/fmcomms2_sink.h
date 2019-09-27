@@ -32,11 +32,51 @@
 namespace gr {
 namespace iio {
 
+  /*!
+   * \brief Device specific sink for FMComms evaluation cards
+   * \ingroup iio
+   *
+   * \details
+   * This block is a sink specifically designed for FMComms2/3/4 evaluation
+   * cards. However, it should support any AD936x based device using an IIO
+   * driver.
+   */
 class IIO_API fmcomms2_sink : virtual public gr::sync_block
 {
 public:
     typedef boost::shared_ptr<fmcomms2_sink> sptr;
 
+    /*!
+     * \brief Return a shared_ptr to a new instance of iio::fmcomms2_sink.
+     *
+     * \param uri  String of the context uri
+     * \param frequency  Long long of LO frequency in Hz
+     * \param samplerate  Long of sample rate in samples per second
+     * \param bandwidth  Long of bandwidth of front-end analog filter  in
+     *                   in Hz
+     * \param ch1_en  Boolean enable channel 1
+     * \param ch2_en  Boolean enable channel 2
+     * \param ch3_en  Boolean enable channel 3
+     * \param ch4_en  Boolean enable channel 4
+     * \param buffer_size  Long of number of samples in buffer to send to device
+     * \param cyclic Boolean when True sends first buffer_size number of samples
+     *        to hardware which is repeated in the hardware itself. Future
+     *        samples are ignored.
+     * \param rf_port_select  String of name of port to use for TX output mux
+     *        with options: 'A', 'B'
+     * \param attenuation1  Double of TX channel 1 attenuation in dB [0, 90]
+     * \param attenuation2  Double of TX channel 2 attenuation in dB [0, 90]
+     * \param filter_source  String which selects filter configuration with
+     *        options:
+     *        'Off': Disable filter
+     *        'Auto': Use auto-generated filters
+     *        'File': Use provide filter filter in filter_filename input
+     *        'Design': Create filter from Fpass, Fstop, samplerate, and
+     *                  bandwidth parameters
+     * \param filter_filename  String of path to filter file
+     % \param Fpass Float of edge of passband frequency in Hz for designed FIR
+     % \param Fstop Float of edge of stopband frequency in Hz for designed FIR
+     */
     static sptr make(const std::string& uri,
                      unsigned long long frequency,
                      unsigned long samplerate,

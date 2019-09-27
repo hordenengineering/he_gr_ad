@@ -38,6 +38,30 @@ class IIO_API pluto_sink : virtual public gr::hier_block2
 public:
     typedef boost::shared_ptr<pluto_sink> sptr;
 
+    /*!
+     * \brief Return a shared_ptr to a new instance of iio::fmcomms2_sink.
+     *
+     * \param uri  String of the context uri
+     * \param frequency  Long long of LO frequency in Hz
+     * \param samplerate  Long of sample rate in samples per second
+     * \param bandwidth  Long of bandwidth of front-end analog filter  in
+     *                   in Hz
+     * \param buffer_size  Long of number of samples in buffer to send to device
+     * \param cyclic Boolean when True sends first buffer_size number of samples
+     *        to hardware which is repeated in the hardware itself. Future
+     *        samples are ignored.
+     * \param attenuation  Double of TX channel attenuation in dB [0, 90]
+     * \param filter_source  String which selects filter configuration with
+     *        options:
+     *        'Off': Disable filter
+     *        'Auto': Use auto-generated filters
+     *        'File': Use provide filter filter in filter_filename input
+     *        'Design': Create filter from Fpass, Fstop, samplerate, and
+     *                  bandwidth parameters
+     * \param filter_filename  String of path to filter file
+     % \param Fpass Float of edge of passband frequency in Hz for designed FIR
+     % \param Fstop Float of edge of stopband frequency in Hz for designed FIR
+     */
     static sptr make(const std::string& uri,
                      unsigned long long frequency,
                      unsigned long samplerate,
