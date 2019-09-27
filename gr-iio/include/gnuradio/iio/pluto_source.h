@@ -51,21 +51,21 @@ public:
      * \param bbdc  Boolean enable RX Baseband DC tracking
      * \param buffer_size  Long of number of samples in buffer to send to device
      * \param gain  String of gain mode with options:
-     *        'manual'
-     *        'slow_attack'
-     *        'fast_attack'
-     *        'hybrid'
+     *        - 'manual'
+     *        - 'slow_attack'
+     *        - 'fast_attack'
+     *        - 'hybrid'
      * \param gain_value  Double of RX channel in dB [0, 76]
      * \param filter_source  String which selects filter configuration with
      *        options:
-     *        'Off': Disable filter
-     *        'Auto': Use auto-generated filters
-     *        'File': Use provide filter filter in filter_filename input
-     *        'Design': Create filter from Fpass, Fstop, samplerate, and
-     *                  bandwidth parameters
+     *        - 'Off': Disable filter
+     *        - 'Auto': Use auto-generated filters
+     *        - 'File': Use provide filter filter in filter_filename input
+     *        - 'Design': Create filter from Fpass, Fstop, samplerate, and
+     *        bandwidth parameters
      * \param filter_filename  String of path to filter file
-     % \param Fpass Float of edge of passband frequency in Hz for designed FIR
-     % \param Fstop Float of edge of stopband frequency in Hz for designed FIR
+     * \param Fpass Float of edge of passband frequency in Hz for designed FIR
+     * \param Fstop Float of edge of stopband frequency in Hz for designed FIR
      */
     static sptr make(const std::string& uri,
                      unsigned long long frequency,

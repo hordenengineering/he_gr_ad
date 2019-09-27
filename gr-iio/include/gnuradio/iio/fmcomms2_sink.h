@@ -68,14 +68,14 @@ public:
      * \param attenuation2  Double of TX channel 2 attenuation in dB [0, 90]
      * \param filter_source  String which selects filter configuration with
      *        options:
-     *        'Off': Disable filter
-     *        'Auto': Use auto-generated filters
-     *        'File': Use provide filter filter in filter_filename input
-     *        'Design': Create filter from Fpass, Fstop, samplerate, and
+     *        - 'Off': Disable filter
+     *        - 'Auto': Use auto-generated filters
+     *        - 'File': Use provide filter filter in filter_filename input
+     *        - 'Design': Create filter from Fpass, Fstop, samplerate, and
      *                  bandwidth parameters
      * \param filter_filename  String of path to filter file
-     % \param Fpass Float of edge of passband frequency in Hz for designed FIR
-     % \param Fstop Float of edge of stopband frequency in Hz for designed FIR
+     * \param Fpass Float of edge of passband frequency in Hz for designed FIR
+     * \param Fstop Float of edge of stopband frequency in Hz for designed FIR
      */
     static sptr make(const std::string& uri,
                      unsigned long long frequency,

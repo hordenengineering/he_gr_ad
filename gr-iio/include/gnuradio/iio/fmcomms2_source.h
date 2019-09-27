@@ -64,40 +64,40 @@ public:
      * \param buffer_size  Long of number of samples in buffer to send to device
      * \param rf_port_select  String of name of port to use for TX output mux
      *        with options:
-     *        'A_BALANCED'
-     *        'B_BALANCED'
-     *        'C_BALANCED'
-     *        'A_N'
-     *        'A_P'
-     *        'B_N'
-     *        'B_P'
-     *        'C_N'
-     *        'C_P'
-     *        'TX_MONITOR1'
-     *        'TX_MONITOR2'
-     *        'TX_MONITOR1_2'
+     *        - 'A_BALANCED'
+     *        - 'B_BALANCED'
+     *        - 'C_BALANCED'
+     *        - 'A_N'
+     *        - 'A_P'
+     *        - 'B_N'
+     *        - 'B_P'
+     *        - 'C_N'
+     *        - 'C_P'
+     *        - 'TX_MONITOR1'
+     *        - 'TX_MONITOR2'
+     *        - 'TX_MONITOR1_2'
      * \param gain1  String of gain mode for channel 1 with options:
-     *        'manual'
-     *        'slow_attack'
-     *        'fast_attack'
-     *        'hybrid'
+     *        - 'manual'
+     *        - 'slow_attack'
+     *        - 'fast_attack'
+     *        - 'hybrid'
      * \param gain1_value  Double of RX channel 1 gain in dB [0, 76]
      * \param gain2  String of gain mode for channel 1 with options:
-     *        'manual'
-     *        'slow_attack'
-     *        'fast_attack'
-     *        'hybrid'
+     *        - 'manual'
+     *        - 'slow_attack'
+     *        - 'fast_attack'
+     *        - 'hybrid'
      * \param gain2_value  Double of RX channel 2 gain in dB [0, 76]
      * \param filter_source  String which selects filter configuration with
      *        options:
-     *        'Off': Disable filter
-     *        'Auto': Use auto-generated filters
-     *        'File': Use provide filter filter in filter_filename input
-     *        'Design': Create filter from Fpass, Fstop, samplerate, and
+     *        - 'Off': Disable filter
+     *        - 'Auto': Use auto-generated filters
+     *        - 'File': Use provide filter filter in filter_filename input
+     *        - 'Design': Create filter from Fpass, Fstop, samplerate, and
      *                  bandwidth parameters
      * \param filter_filename  String of path to filter file
-     % \param Fpass Float of edge of passband frequency in Hz for designed FIR
-     % \param Fstop Float of edge of stopband frequency in Hz for designed FIR
+     * \param Fpass Float of edge of passband frequency in Hz for designed FIR
+     * \param Fstop Float of edge of stopband frequency in Hz for designed FIR
      */
     static sptr make(const std::string& uri,
                      unsigned long long frequency,
