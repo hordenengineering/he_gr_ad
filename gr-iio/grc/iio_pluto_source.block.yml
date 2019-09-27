@@ -1,6 +1,6 @@
 id: iio_pluto_source
 label: PlutoSDR Source
-flags: [ python, throttle ]
+flags: [ throttle ]
 
 parameters:
 -   id: uri
@@ -109,8 +109,8 @@ asserts:
 
 templates:
     imports: from gnuradio import iio
-    make: iio.pluto_source(${uri}, ${frequency}, ${samplerate}, ${bandwidth}, ${buffer_size}, ${quadrature}, ${rfdc}, ${bbdc}, ${gain1}, ${manual_gain1}, ${filter_source}, ${filter}, ${Fpass}, ${Fstop})
+    make: iio.pluto_source(${uri}, ${frequency}, ${samplerate}, ${bandwidth}, ${buffer_size}, ${quadrature}, ${rfdc}, ${bbdc}, ${gain1}, ${manual_gain1}, ${filter_source}, ${filter}, ${fpass}, ${fstop})
     callbacks:
-      - set_params(${frequency}, ${samplerate}, ${bandwidth}, ${buffer_size}, ${quadrature}, ${rfdc}, ${bbdc}, ${gain1}, ${manual_gain1}, ${filter_source}, ${filter}, ${Fpass}, ${Fstop})
+      - set_params(${frequency}, ${samplerate}, ${bandwidth}, ${buffer_size}, ${quadrature}, ${rfdc}, ${bbdc}, ${gain1}, ${manual_gain1}, ${filter_source}, ${filter}, ${fpass}, ${fstop})
 
 file_format: 1
