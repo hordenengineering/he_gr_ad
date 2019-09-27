@@ -130,7 +130,6 @@ void device_source_impl::set_timeout_ms(unsigned long _timeout)
 struct iio_context* device_source_impl::get_context(const std::string& uri)
 {
     struct iio_context* ctx;
-    unsigned short vid, pid;
 
     // Check if we have a context with the same URI open
     if (!contexts.empty()) {
@@ -184,7 +183,6 @@ device_source_impl::device_source_impl(struct iio_context* ctx,
       destroy_ctx(destroy_ctx)
 {
     unsigned int nb_channels, i;
-    unsigned short vid, pid;
 
     if (!ctx)
         throw std::runtime_error("Unable to create context");
@@ -461,7 +459,6 @@ int device_source_impl::handle_decimation_interpolation(unsigned long samplerate
 {
     int ret;
     struct iio_channel* chan;
-    size_t s;
     char buff[128];
     unsigned long long min, max;
 
@@ -474,7 +471,7 @@ int device_source_impl::handle_decimation_interpolation(unsigned long samplerate
         // Channel doesn't exist so the dec/int filters probably don't exist
         return -1;
     }
-    s = iio_channel_attr_read(chan, an.c_str(), buff, sizeof(buff));
+    iio_channel_attr_read(chan, an.c_str(), buff, sizeof(buff));
     sscanf(buff, "%llu %llu ", &max, &min);
 
     // Write lower range (maybe)
