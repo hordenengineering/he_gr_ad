@@ -112,7 +112,6 @@ attr_source_impl::attr_source_impl(const std::string& uri,
       attr_type(attr_type),
       data_type(data_type),
       output(output),
-      m_attr_type(attr_type),
       address(address),
       required_enable(required_enable)
 {
@@ -136,7 +135,6 @@ attr_source_impl::attr_source_impl(const std::string& uri,
 
     // Required for MathWorks generated IP
     if ((attr_type == 3) && required_enable) {
-        // int ret = iio_device_debug_attr_write(dev, "direct_reg_access", "enabled");
         int ret = iio_device_attr_write(dev, "reg_access", "enabled");
 
         if (ret < 0) {

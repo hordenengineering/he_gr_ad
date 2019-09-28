@@ -39,9 +39,8 @@ private:
     std::string attribute;
     int update_interval_ms;
     int samples_per_update;
-    int data_type;
     int attr_type;
-    int m_attr_type;
+    int data_type;
     bool output;
     int ret;
     uint32_t address;

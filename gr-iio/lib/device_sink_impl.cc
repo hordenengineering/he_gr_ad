@@ -99,7 +99,6 @@ device_sink_impl::device_sink_impl(struct iio_context* ctx,
       destroy_ctx(destroy_ctx)
 {
     unsigned int nb_channels, i;
-    unsigned short vid, pid;
 
     /* Set minimum input size */
     set_output_multiple(buffer_size / (interpolation + 1));
