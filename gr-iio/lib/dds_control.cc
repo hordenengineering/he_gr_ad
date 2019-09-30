@@ -54,11 +54,12 @@ dds_control_impl::dds_control_impl(const std::string& uri,
                 gr::io_signature::make(0, 0, 0)),
       d_enabled(enabled),
       d_frequencies(frequencies),
-      d_uri(uri),
       d_phases(phases),
-      d_scales(scales)
+      d_scales(scales),
+      d_uri(uri)
 {
-    int k, chans, count = 0;
+    int k, chans;
+    unsigned int ku = 0, count = 0;
     struct iio_channel* chan;
 
     d_ctx = device_source_impl::get_context(uri);
@@ -89,8 +90,8 @@ dds_control_impl::dds_control_impl(const std::string& uri,
         if (iio_channel_find_attr(chan, "raw") != NULL)
             count++;
     }
-    for (k = 1; k <= enabled.size(); k++)
-        if ((count < k * 4) && enabled[k - 1] > 0)
+    for (ku = 1; ku <= enabled.size(); ku++)
+        if ((count < ku * 4) && enabled[ku - 1] > 0)
             throw std::runtime_error(
                 "Not enough DDSs available in hardware for configuration");
 
@@ -102,6 +103,7 @@ void dds_control_impl::set_dds_confg(std::vector<long> frequencies,
                                      std::vector<float> scales)
 {
     int ret, chans, k, dds_indx = 0, enable_indx = 0, enable = 0;
+    unsigned int ku;
     struct iio_channel* chan;
 
     // Check vector sizes
@@ -109,14 +111,14 @@ void dds_control_impl::set_dds_confg(std::vector<long> frequencies,
         throw std::runtime_error(
             "Frequencies, Phases, and Scales must be all the same size");
 
-    for (k = 0; k < d_frequencies.size(); k++) {
-        d_frequencies[k] = frequencies[k];
-        d_phases[k] = phases[k] * 1000;
-        d_scales[k] = scales[k];
+    for (ku = 0; ku < d_frequencies.size(); ku++) {
+        d_frequencies[ku] = frequencies[ku];
+        d_phases[ku] = phases[ku] * 1000;
+        d_scales[ku] = scales[ku];
     }
     // DDS raw settings must be all on or all off
-    for (k = 0; k < d_enabled.size(); k++)
-        enable += d_enabled[k];
+    for (ku = 0; ku < d_enabled.size(); ku++)
+        enable += d_enabled[ku];
 
     // Enable/Disable DDSs
     chans = iio_device_get_channels_count(d_dev);

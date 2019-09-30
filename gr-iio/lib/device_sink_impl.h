@@ -41,8 +41,8 @@ protected:
     struct iio_device *dev, *phy;
     struct iio_buffer* buf;
     std::vector<struct iio_channel*> channel_list;
-    unsigned int buffer_size;
     unsigned int interpolation;
+    unsigned int buffer_size;
     bool destroy_ctx;
 
 public:
