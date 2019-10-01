@@ -292,12 +292,6 @@ fmcomms5_source_impl::fmcomms5_source_impl(struct iio_context* ctx,
                filter_filename,
                Fpass,
                Fstop);
-
-    // std::string filt(filter);
-    // if (!filt.empty() && !(load_fir_filter(filt, phy) && load_fir_filter(filt, phy2)))
-    //     throw std::runtime_error("Unable to load filter file");
-
-
 }
 
 void fmcomms5_source_impl::set_params(struct iio_device* phy_device,
@@ -318,20 +312,53 @@ void fmcomms5_source_impl::set_params(struct iio_device* phy_device,
                                       float Fstop)
 {
     std::vector<std::string> params;
+    std::string gain1_str(gain1);
+    std::string gain2_str(gain2);
+    int ret;
 
     params.push_back("out_altvoltage0_RX_LO_frequency=" + boost::to_string(frequency));
-    params.push_back("in_voltage_sampling_frequency=" + boost::to_string(samplerate));
-    params.push_back("in_voltage_rf_bandwidth=" + boost::to_string(bandwidth));
     params.push_back("in_voltage_quadrature_tracking_en=" + boost::to_string(quadrature));
     params.push_back("in_voltage_rf_dc_offset_tracking_en=" + boost::to_string(rfdc));
     params.push_back("in_voltage_bb_dc_offset_tracking_en=" + boost::to_string(bbdc));
     params.push_back("in_voltage0_gain_control_mode=" + boost::to_string(gain1));
-    params.push_back("in_voltage0_hardwaregain=" + boost::to_string(gain1_value));
+    if (gain1_str.compare("manual") == 0)
+        params.push_back("in_voltage0_hardwaregain=" + boost::to_string(gain1_value));
     params.push_back("in_voltage1_gain_control_mode=" + boost::to_string(gain2));
-    params.push_back("in_voltage1_hardwaregain=" + boost::to_string(gain2_value));
+    if (gain2_str.compare("manual") == 0)
+        params.push_back("in_voltage1_hardwaregain=" + boost::to_string(gain2_value));
     params.push_back("in_voltage0_rf_port_select=" + boost::to_string(port_select));
 
+    // Set rate configuration
+    std::string filt_config(filter_source);
+    if (filt_config.compare("Off") == 0) {
+        params.push_back("in_voltage_sampling_frequency=" + boost::to_string(samplerate));
+        params.push_back("in_voltage_rf_bandwidth=" + boost::to_string(bandwidth));
+    } else if (filt_config.compare("Auto") == 0) {
+        params.push_back("in_voltage_rf_bandwidth=" + boost::to_string(bandwidth));
+        ret = ad9361_set_bb_rate(phy_device, samplerate);
+        if (ret)
+            throw std::runtime_error("Unable to set BB rate");
+    } else if (filt_config.compare("File") == 0) {
+        std::string filt(filter_filename);
+        if (!filt.empty() && !load_fir_filter(filt, phy_device))
+            throw std::runtime_error("Unable to load filter file");
+    } else if (filt_config.compare("Design") == 0) {
+        ret = ad9361_set_bb_rate_custom_filter_manual(
+            phy_device, samplerate, Fpass, Fstop, bandwidth, bandwidth);
+        if (ret)
+            throw std::runtime_error("Unable to set BB rate");
+    } else
+        throw std::runtime_error("Unknown filter configuration");
+
     device_source_impl::set_params(phy_device, params);
+
+    // Filters can only be disabled after the sample rate has been set
+    if (filt_config.compare("Off") == 0) {
+        ret = ad9361_set_trx_fir_enable(phy_device, false);
+        if (ret) {
+            throw std::runtime_error("Unable to disable fitlers");
+        }
+    }
 }
 
 void fmcomms5_source_impl::set_params(unsigned long long frequency1,
