@@ -49,7 +49,11 @@ private:
                            double gain1_value,
                            const char* gain2,
                            double gain2_value,
-                           const char* port_select);
+                           const char* port_select,
+                           const char* filter_source,
+                           const char* filter_filename,
+                           float Fpass,
+                           float Fstop);
 
     std::vector<std::string> get_channels_vector(bool ch1_en,
                                                  bool ch2_en,
@@ -88,7 +92,10 @@ public:
                          const char* gain4,
                          double gain4_value,
                          const char* rf_port_select,
-                         const char* filter);
+                         const char* filter_source,
+                         const char* filter_filename,
+                         float Fpass,
+                         float Fstop);
 
     void set_params(unsigned long long frequency1,
                     unsigned long long frequency2,
@@ -105,7 +112,12 @@ public:
                     double gain3_value,
                     const char* gain4,
                     double gain4_value,
-                    const char* rf_port_select);
+                    const char* rf_port_select,
+                    const char* filter_source,
+                    const char* filter_filename,
+                    float Fpass,
+                    float Fstop);
+
 };
 
 } // namespace iio

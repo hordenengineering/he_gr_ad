@@ -90,7 +90,10 @@ fmcomms5_source::sptr fmcomms5_source::make(const std::string& uri,
                                             const char* gain4,
                                             double gain4_value,
                                             const char* port_select,
-                                            const char* filter)
+                                            const char* filter_source,
+                                            const char* filter_filename,
+                                            float Fpass,
+                                            float Fstop)
 {
     return gnuradio::get_initial_sptr(
         new fmcomms5_source_impl(device_source_impl::get_context(uri),
@@ -120,7 +123,10 @@ fmcomms5_source::sptr fmcomms5_source::make(const std::string& uri,
                                  gain4,
                                  gain4_value,
                                  port_select,
-                                 filter));
+                                 filter_source,
+                                 filter_filename,
+                                 Fpass,
+                                 Fstop));
 }
 
 fmcomms5_source::sptr fmcomms5_source::make_from(struct iio_context* ctx,
@@ -149,7 +155,10 @@ fmcomms5_source::sptr fmcomms5_source::make_from(struct iio_context* ctx,
                                                  const char* gain4,
                                                  double gain4_value,
                                                  const char* port_select,
-                                                 const char* filter)
+                                                 const char* filter_source,
+                                                 const char* filter_filename,
+                                                 float Fpass,
+                                                 float Fstop)
 {
     return gnuradio::get_initial_sptr(new fmcomms5_source_impl(ctx,
                                                                false,
@@ -178,7 +187,10 @@ fmcomms5_source::sptr fmcomms5_source::make_from(struct iio_context* ctx,
                                                                gain4,
                                                                gain4_value,
                                                                port_select,
-                                                               filter));
+                                                               filter_source,
+                                                               filter_filename,
+                                                               Fpass,
+                                                               Fstop));
 }
 
 std::vector<std::string> fmcomms5_source_impl::get_channels_vector(bool ch1_en,
@@ -237,7 +249,10 @@ fmcomms5_source_impl::fmcomms5_source_impl(struct iio_context* ctx,
                                            const char* gain4,
                                            double gain4_value,
                                            const char* port_select,
-                                           const char* filter)
+                                           const char* filter_source,
+                                           const char* filter_filename,
+                                           float Fpass,
+                                           float Fstop)
     : gr::sync_block("fmcomms5_source",
                      gr::io_signature::make(0, 0, 0),
                      gr::io_signature::make(1, -1, sizeof(short))),
@@ -272,11 +287,17 @@ fmcomms5_source_impl::fmcomms5_source_impl(struct iio_context* ctx,
                gain3_value,
                gain4,
                gain4_value,
-               port_select);
+               port_select,
+               filter_source,
+               filter_filename,
+               Fpass,
+               Fstop);
 
-    std::string filt(filter);
-    if (!filt.empty() && !(load_fir_filter(filt, phy) && load_fir_filter(filt, phy2)))
-        throw std::runtime_error("Unable to load filter file");
+    // std::string filt(filter);
+    // if (!filt.empty() && !(load_fir_filter(filt, phy) && load_fir_filter(filt, phy2)))
+    //     throw std::runtime_error("Unable to load filter file");
+
+
 }
 
 void fmcomms5_source_impl::set_params(struct iio_device* phy_device,
@@ -290,7 +311,11 @@ void fmcomms5_source_impl::set_params(struct iio_device* phy_device,
                                       double gain1_value,
                                       const char* gain2,
                                       double gain2_value,
-                                      const char* port_select)
+                                      const char* port_select,
+                                      const char* filter_source,
+                                      const char* filter_filename,
+                                      float Fpass,
+                                      float Fstop)
 {
     std::vector<std::string> params;
 
@@ -324,7 +349,11 @@ void fmcomms5_source_impl::set_params(unsigned long long frequency1,
                                       double gain3_value,
                                       const char* gain4,
                                       double gain4_value,
-                                      const char* port_select)
+                                      const char* port_select,
+                                      const char* filter_source,
+                                      const char* filter_filename,
+                                      float Fpass,
+                                      float Fstop)
 {
     set_params(this->phy,
                frequency1,
@@ -337,7 +366,11 @@ void fmcomms5_source_impl::set_params(unsigned long long frequency1,
                gain1_value,
                gain2,
                gain2_value,
-               port_select);
+               port_select,
+               filter_source,
+               filter_filename,
+               Fpass,
+               Fstop);
     set_params(this->phy2,
                frequency2,
                samplerate,
@@ -349,7 +382,11 @@ void fmcomms5_source_impl::set_params(unsigned long long frequency1,
                gain3_value,
                gain4,
                gain4_value,
-               port_select);
+               port_select,
+               filter_source,
+               filter_filename,
+               Fpass,
+               Fstop);
 
     if (this->samplerate != samplerate) {
         ad9361_fmcomms5_multichip_sync(ctx, FIXUP_INTERFACE_TIMING | CHECK_SAMPLE_RATES);

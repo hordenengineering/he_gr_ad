@@ -76,7 +76,10 @@ public:
                      const char* gain4,
                      double gain4_value,
                      const char* rf_port_select,
-                     const char* filter = "");
+                     const char* filter_source = "",
+                     const char* filter_filename = "",
+                     float Fpass = 0.0,
+                     float Fstop = 0.0);
 
     static sptr make_from(struct iio_context* ctx,
                           unsigned long long frequency1,
@@ -104,7 +107,10 @@ public:
                           const char* gain4,
                           double gain4_value,
                           const char* rf_port_select,
-                          const char* filter = "");
+                          const char* filter_source = "",
+                          const char* filter_filename = "",
+                          float Fpass = 0.0,
+                          float Fstop = 0.0);
 
     virtual void set_params(unsigned long long frequency1,
                             unsigned long long frequency2,
@@ -121,7 +127,11 @@ public:
                             double gain3_value,
                             const char* gain4,
                             double gain4_value,
-                            const char* rf_port_select) = 0;
+                            const char* rf_port_select,
+                            const char* filter_source,
+                            const char* filter_filename,
+                            float Fpass,
+                            float Fstop) = 0;
 };
 
 class IIO_API fmcomms5_source_f32c : virtual public gr::hier_block2
@@ -151,7 +161,10 @@ public:
                      const char* gain4,
                      double gain4_value,
                      const char* rf_port_select,
-                     const char* filter = "")
+                     const char* filter_source = "",
+                     const char* filter_filename = "",
+                     float Fpass = 0.0,
+                     float Fstop = 0.0)
     {
         fmcomms5_source::sptr block = fmcomms5_source::make(uri,
                                                             frequency1,
@@ -179,7 +192,10 @@ public:
                                                             gain4,
                                                             gain4_value,
                                                             rf_port_select,
-                                                            filter);
+                                                            filter_source,
+                                                            filter_filename,
+                                                            Fpass,
+                                                            Fstop);
 
         return gnuradio::get_initial_sptr(
             new fmcomms5_source_f32c(rx1_en, rx2_en, rx3_en, rx4_en, block));
@@ -200,7 +216,11 @@ public:
                     double gain3_value,
                     const char* gain4,
                     double gain4_value,
-                    const char* rf_port_select)
+                    const char* rf_port_select,
+                    const char* filter_source,
+                    const char* filter_filename,
+                    float Fpass,
+                    float Fstop)
     {
         fmcomms5_block->set_params(frequency1,
                                    frequency2,
@@ -217,7 +237,11 @@ public:
                                    gain3_value,
                                    gain4,
                                    gain4_value,
-                                   rf_port_select);
+                                   rf_port_select,
+                                   filter_source,
+                                   filter_filename,
+                                   Fpass,
+                                   Fstop);
     }
 
 private:

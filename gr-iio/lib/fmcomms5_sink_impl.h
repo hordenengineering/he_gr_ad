@@ -45,7 +45,11 @@ private:
                            unsigned long bandwidth,
                            const char* rf_port_select,
                            double attenuation1,
-                           double attenuation2);
+                           double attenuation2,
+                           const char* filter_source,
+                           const char* filter_filename,
+                           float Fpass,
+                           float Fstop);
 
     std::vector<std::string> get_channels_vector(bool ch1_en,
                                                  bool ch2_en,
@@ -78,7 +82,10 @@ public:
                        double attenuation2,
                        double attenuation3,
                        double attenuation4,
-                       const char* filter);
+                       const char* filter_source,
+                       const char* filter_filename,
+                       float Fpass,
+                       float Fstop);
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
@@ -92,7 +99,11 @@ public:
                     double attenuation1,
                     double attenuation2,
                     double attenuation3,
-                    double attenuation4);
+                    double attenuation4,
+                    const char* filter_source,
+                    const char* filter_filename,
+                    float Fpass,
+                    float Fstop);
 };
 
 } // namespace iio

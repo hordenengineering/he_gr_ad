@@ -85,7 +85,10 @@ fmcomms5_sink::sptr fmcomms5_sink::make(const std::string& uri,
                                         double attenuation2,
                                         double attenuation3,
                                         double attenuation4,
-                                        const char* filter)
+                                        const char* filter_source,
+                                        const char* filter_filename,
+                                        float Fpass,
+                                        float Fstop)
 {
     return gnuradio::get_initial_sptr(
         new fmcomms5_sink_impl(device_source_impl::get_context(uri),
@@ -109,7 +112,10 @@ fmcomms5_sink::sptr fmcomms5_sink::make(const std::string& uri,
                                attenuation2,
                                attenuation3,
                                attenuation4,
-                               filter));
+                               filter_source,
+                               filter_filename,
+                               Fpass,
+                               Fstop));
 }
 
 fmcomms5_sink::sptr fmcomms5_sink::make_from(struct iio_context* ctx,
@@ -132,7 +138,10 @@ fmcomms5_sink::sptr fmcomms5_sink::make_from(struct iio_context* ctx,
                                              double attenuation2,
                                              double attenuation3,
                                              double attenuation4,
-                                             const char* filter)
+                                             const char* filter_source,
+                                             const char* filter_filename,
+                                             float Fpass,
+                                             float Fstop)
 {
     return gnuradio::get_initial_sptr(new fmcomms5_sink_impl(ctx,
                                                              false,
@@ -155,7 +164,10 @@ fmcomms5_sink::sptr fmcomms5_sink::make_from(struct iio_context* ctx,
                                                              attenuation2,
                                                              attenuation3,
                                                              attenuation4,
-                                                             filter));
+                                                             filter_source,
+                                                             filter_filename,
+                                                             Fpass,
+                                                             Fstop));
 }
 
 std::vector<std::string> fmcomms5_sink_impl::get_channels_vector(bool ch1_en,
@@ -208,7 +220,10 @@ fmcomms5_sink_impl::fmcomms5_sink_impl(struct iio_context* ctx,
                                        double attenuation2,
                                        double attenuation3,
                                        double attenuation4,
-                                       const char* filter)
+                                       const char* filter_source,
+                                       const char* filter_filename,
+                                       float Fpass,
+                                       float Fstop)
     : gr::sync_block("fmcomms5_sink",
                      gr::io_signature::make(1, -1, sizeof(short)),
                      gr::io_signature::make(0, 0, 0)),
@@ -238,12 +253,16 @@ fmcomms5_sink_impl::fmcomms5_sink_impl(struct iio_context* ctx,
                attenuation1,
                attenuation2,
                attenuation3,
-               attenuation4);
+               attenuation4,
+               filter_source,
+               filter_filename,
+               Fpass,
+               Fstop);
 
-    std::string filt(filter);
-    if (!filt.empty() && !(device_source_impl::load_fir_filter(filt, phy) &&
-                           device_source_impl::load_fir_filter(filt, phy2)))
-        throw std::runtime_error("Unable to load filter file");
+    // std::string filt(filter);
+    // if (!filt.empty() && !(device_source_impl::load_fir_filter(filt, phy) &&
+    //                        device_source_impl::load_fir_filter(filt, phy2)))
+    //     throw std::runtime_error("Unable to load filter file");
 }
 
 void fmcomms5_sink_impl::set_params(struct iio_device* phy_device,
@@ -252,7 +271,11 @@ void fmcomms5_sink_impl::set_params(struct iio_device* phy_device,
                                     unsigned long bandwidth,
                                     const char* rf_port_select,
                                     double attenuation1,
-                                    double attenuation2)
+                                    double attenuation2,
+                                    const char* filter_source,
+                                    const char* filter_filename,
+                                    float Fpass,
+                                    float Fstop)
 {
     std::vector<std::string> params;
 
@@ -274,7 +297,11 @@ void fmcomms5_sink_impl::set_params(unsigned long long frequency1,
                                     double attenuation1,
                                     double attenuation2,
                                     double attenuation3,
-                                    double attenuation4)
+                                    double attenuation4,
+                                    const char* filter_source,
+                                    const char* filter_filename,
+                                    float Fpass,
+                                    float Fstop)
 {
     set_params(this->phy,
                frequency1,
@@ -282,14 +309,23 @@ void fmcomms5_sink_impl::set_params(unsigned long long frequency1,
                bandwidth,
                rf_port_select,
                attenuation1,
-               attenuation2);
+               attenuation2,
+               filter_source,
+               filter_filename,
+               Fpass,
+               Fstop);
     set_params(this->phy2,
                frequency2,
                samplerate,
                bandwidth,
                rf_port_select,
                attenuation3,
-               attenuation4);
+               attenuation4,
+               filter_source,
+               filter_filename,
+               Fpass,
+               Fstop
+             );
 
     if (this->samplerate != samplerate) {
         ad9361_fmcomms5_multichip_sync(ctx, FIXUP_INTERFACE_TIMING | CHECK_SAMPLE_RATES);
