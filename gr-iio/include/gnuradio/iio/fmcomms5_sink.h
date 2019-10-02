@@ -47,7 +47,7 @@ public:
     typedef boost::shared_ptr<fmcomms5_sink> sptr;
 
     /*!
-     * \brief Return a shared_ptr to a new instance of iio::fmcomms2_sink.
+     * \brief Return a shared_ptr to a new instance of iio::fmcomms5_sink.
      *
      * \param uri  String of the context uri
      * \param frequency1  Long long of LO frequency in Hz of chip A
@@ -149,20 +149,63 @@ public:
                             float Fstop) = 0;
 };
 
+/*!
+ * \brief Device specific sink for FMComms5 evaluation card
+ * \ingroup iio
+ *
+ * \details
+ * This block is a sink specifically designed for FMComms5 evaluation
+ * card. The FMComms5 is a dual AD9361 FMC card which enables 4x4
+ * applications.
+ */
 class IIO_API fmcomms5_sink_f32c : virtual public gr::hier_block2
 {
 public:
     typedef boost::shared_ptr<fmcomms5_sink_f32c> sptr;
 
+    /*!
+     * \brief Return a shared_ptr to a new instance of iio::fmcomms5_sink.
+     *
+     * \param uri  String of the context uri
+     * \param frequency1  Long long of LO frequency in Hz of chip A
+     * \param frequency2  Long long of LO frequency in Hz of chip B
+     * \param samplerate  Long of sample rate in samples per second
+     * \param bandwidth  Long of bandwidth of front-end analog filter  in
+     *                   in Hz
+     * \param tx1_en  Boolean enable channel 1
+     * \param tx2_en  Boolean enable channel 2
+     * \param tx3_en  Boolean enable channel 3
+     * \param tx4_en  Boolean enable channel 4
+     * \param buffer_size  Long of number of samples in buffer to send to device
+     * \param cyclic Boolean when True sends first buffer_size number of samples
+     *        to hardware which is repeated in the hardware itself. Future
+     *        samples are ignored.
+     * \param rf_port_select  String of name of port to use for TX output mux
+     *        with options: 'A', 'B'
+     * \param attenuation1  Double of TX channel 1 attenuation in dB [0, 90]
+     * \param attenuation2  Double of TX channel 2 attenuation in dB [0, 90]
+     * \param attenuation3  Double of TX channel 3 attenuation in dB [0, 90]
+     * \param attenuation4  Double of TX channel 4 attenuation in dB [0, 90]
+     * \param filter_source  String which selects filter configuration with
+     *        options:
+     *        - 'Off': Disable filter
+     *        - 'Auto': Use auto-generated filters
+     *        - 'File': Use provide filter filter in filter_filename input
+     *        - 'Design': Create filter from Fpass, Fstop, samplerate, and
+     *                  bandwidth parameters
+     * \param filter_filename  String of path to filter file
+     * \param Fpass Float of edge of passband frequency in Hz for designed FIR
+     * \param Fstop Float of edge of stopband frequency in Hz for designed FIR
+     */
     static sptr make(const std::string& uri,
                      unsigned long long frequency1,
                      unsigned long long frequency2,
                      unsigned long samplerate,
                      unsigned long bandwidth,
-                     bool rx1_en,
-                     bool rx2_en,
-                     bool rx3_en,
-                     bool rx4_en,
+                     bool tx1_en,
+                     bool tx2_en,
+                     bool tx3_en,
+                     bool tx4_en,
                      unsigned long buffer_size,
                      bool cyclic,
                      const char* rf_port_select,
@@ -180,14 +223,14 @@ public:
                                                         frequency2,
                                                         samplerate,
                                                         bandwidth,
-                                                        rx1_en,
-                                                        rx1_en,
-                                                        rx2_en,
-                                                        rx2_en,
-                                                        rx3_en,
-                                                        rx3_en,
-                                                        rx4_en,
-                                                        rx4_en,
+                                                        tx1_en,
+                                                        tx1_en,
+                                                        tx2_en,
+                                                        tx2_en,
+                                                        tx3_en,
+                                                        tx3_en,
+                                                        tx4_en,
+                                                        tx4_en,
                                                         buffer_size,
                                                         cyclic,
                                                         rf_port_select,
@@ -201,7 +244,7 @@ public:
                                                         Fstop);
 
         return gnuradio::get_initial_sptr(
-            new fmcomms5_sink_f32c(rx1_en, rx2_en, rx3_en, rx4_en, block));
+            new fmcomms5_sink_f32c(tx1_en, tx2_en, tx3_en, tx4_en, block));
     }
 
     void set_params(unsigned long long frequency1,
@@ -238,7 +281,7 @@ private:
 
 protected:
     explicit fmcomms5_sink_f32c(
-        bool rx1_en, bool rx2_en, bool rx3_en, bool rx4_en, fmcomms5_sink::sptr block);
+        bool tx1_en, bool tx2_en, bool tx3_en, bool tx4_en, fmcomms5_sink::sptr block);
 };
 
 } // namespace iio

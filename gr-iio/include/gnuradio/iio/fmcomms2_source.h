@@ -160,11 +160,71 @@ public:
                             float Fstop = 0.0) = 0;
 };
 
+/*!
+ * \brief Device specific source for FMComms evaluation cards
+ * \ingroup iio
+ *
+ * \details
+ * This block is a source specifically designed for FMComms2/3/4 evaluation
+ * cards. However, it should support any AD936x based device using an IIO
+ * driver.
+ */
 class IIO_API fmcomms2_source_f32c : virtual public gr::hier_block2
 {
 public:
     typedef boost::shared_ptr<fmcomms2_source_f32c> sptr;
 
+    /*!
+     * \brief Return a shared_ptr to a new instance of iio::fmcomms2_source.
+     *
+     * \param uri  String of the context uri
+     * \param frequency  Long long of LO frequency in Hz
+     * \param samplerate  Long of sample rate in samples per second
+     * \param bandwidth  Long of bandwidth of front-end analog filter  in
+     *                   in Hz
+     * \param rx1_en  Boolean enable channel 1
+     * \param rx2_en  Boolean enable channel 2
+     * \param quadrature  Boolean enable RX quadrature tracking
+     * \param rfdc  Boolean enable RX RF DC tracking
+     * \param bbdc  Boolean enable RX Baseband DC tracking
+     * \param buffer_size  Long of number of samples in buffer to send to device
+     * \param rf_port_select  String of name of port to use for TX output mux
+     *        with options:
+     *        - 'A_BALANCED'
+     *        - 'B_BALANCED'
+     *        - 'C_BALANCED'
+     *        - 'A_N'
+     *        - 'A_P'
+     *        - 'B_N'
+     *        - 'B_P'
+     *        - 'C_N'
+     *        - 'C_P'
+     *        - 'TX_MONITOR1'
+     *        - 'TX_MONITOR2'
+     *        - 'TX_MONITOR1_2'
+     * \param gain1  String of gain mode for channel 1 with options:
+     *        - 'manual'
+     *        - 'slow_attack'
+     *        - 'fast_attack'
+     *        - 'hybrid'
+     * \param gain1_value  Double of RX channel 1 gain in dB [0, 76]
+     * \param gain2  String of gain mode for channel 1 with options:
+     *        - 'manual'
+     *        - 'slow_attack'
+     *        - 'fast_attack'
+     *        - 'hybrid'
+     * \param gain2_value  Double of RX channel 2 gain in dB [0, 76]
+     * \param filter_source  String which selects filter configuration with
+     *        options:
+     *        - 'Off': Disable filter
+     *        - 'Auto': Use auto-generated filters
+     *        - 'File': Use provide filter filter in filter_filename input
+     *        - 'Design': Create filter from Fpass, Fstop, samplerate, and
+     *                  bandwidth parameters
+     * \param filter_filename  String of path to filter file
+     * \param Fpass Float of edge of passband frequency in Hz for designed FIR
+     * \param Fstop Float of edge of stopband frequency in Hz for designed FIR
+     */
     static sptr make(const std::string& uri,
                      unsigned long long frequency,
                      unsigned long samplerate,
