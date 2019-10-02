@@ -32,15 +32,15 @@
 namespace gr {
 namespace iio {
 
-  /*!
-   * \brief Device specific source for FMComms evaluation cards
-   * \ingroup iio
-   *
-   * \details
-   * This block is a source specifically designed for FMComms2/3/4 evaluation
-   * cards. However, it should support any AD936x based device using an IIO
-   * driver.
-   */
+/*!
+ * \brief Device specific source for FMComms evaluation cards
+ * \ingroup iio
+ *
+ * \details
+ * This block is a source specifically designed for FMComms2/3/4 evaluation
+ * cards. However, it should support any AD936x based device using an IIO
+ * driver.
+ */
 class IIO_API fmcomms2_source : virtual public gr::sync_block
 {
 public:

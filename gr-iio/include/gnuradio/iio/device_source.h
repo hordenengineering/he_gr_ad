@@ -36,12 +36,12 @@ namespace gr {
 namespace iio {
 
 /*!
-* \brief Generic source for IIO drivers with buffered output channels
-* \ingroup iio
-*
-* \details
-* This block allows for streaming data from any IIO driver which has output
-* scan elements or buffered channels.
+ * \brief Generic source for IIO drivers with buffered output channels
+ * \ingroup iio
+ *
+ * \details
+ * This block allows for streaming data from any IIO driver which has output
+ * scan elements or buffered channels.
  */
 class IIO_API device_source : virtual public gr::sync_block
 {

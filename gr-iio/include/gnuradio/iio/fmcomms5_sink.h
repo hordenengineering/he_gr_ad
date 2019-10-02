@@ -32,15 +32,15 @@
 namespace gr {
 namespace iio {
 
-  /*!
-   * \brief Device specific sink for FMComms5 evaluation card
-   * \ingroup iio
-   *
-   * \details
-   * This block is a sink specifically designed for FMComms5 evaluation
-   * card. The FMComms5 is a dual AD9361 FMC card which enables 4x4
-   * applications.
-   */
+/*!
+ * \brief Device specific sink for FMComms5 evaluation card
+ * \ingroup iio
+ *
+ * \details
+ * This block is a sink specifically designed for FMComms5 evaluation
+ * card. The FMComms5 is a dual AD9361 FMC card which enables 4x4
+ * applications.
+ */
 class IIO_API fmcomms5_sink : virtual public gr::sync_block
 {
 public:

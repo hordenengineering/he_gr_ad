@@ -29,15 +29,15 @@
 namespace gr {
 namespace iio {
 
-  /*!
-   * \brief Generic reader for attributes of IIO devices
-   * \ingroup iio
-   *
-   * \details
-   * This block allow for reading of any IIO attribute that is readable. This
-   * includes channel, device, device buffer, device debug, and direct register
-   * attributes.
-   */
+/*!
+ * \brief Generic reader for attributes of IIO devices
+ * \ingroup iio
+ *
+ * \details
+ * This block allow for reading of any IIO attribute that is readable. This
+ * includes channel, device, device buffer, device debug, and direct register
+ * attributes.
+ */
 class IIO_API attr_source : virtual public gr::sync_block
 {
 public:

@@ -32,15 +32,15 @@
 namespace gr {
 namespace iio {
 
-  /*!
-   * \brief Device specific sink for FMComms evaluation cards
-   * \ingroup iio
-   *
-   * \details
-   * This block is a sink specifically designed for FMComms2/3/4 evaluation
-   * cards. However, it should support any AD936x based device using an IIO
-   * driver.
-   */
+/*!
+ * \brief Device specific sink for FMComms evaluation cards
+ * \ingroup iio
+ *
+ * \details
+ * This block is a sink specifically designed for FMComms2/3/4 evaluation
+ * cards. However, it should support any AD936x based device using an IIO
+ * driver.
+ */
 class IIO_API fmcomms2_sink : virtual public gr::sync_block
 {
 public:
