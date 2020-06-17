@@ -41,7 +41,7 @@ namespace gr {
       bool d_updated;
       pmt::pmt_t d_msg;
       std::mutex d_mtx;
-      boost::shared_ptr<gr::thread::thread> d_thread;
+      std::shared_ptr<gr::thread::thread> d_thread;
 
       void run();
 

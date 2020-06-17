@@ -44,7 +44,7 @@ namespace iio {
 class IIO_API fmcomms2_sink : virtual public gr::sync_block
 {
 public:
-    typedef boost::shared_ptr<fmcomms2_sink> sptr;
+    typedef std::shared_ptr<fmcomms2_sink> sptr;
 
     /*!
      * \brief Return a shared_ptr to a new instance of iio::fmcomms2_sink.
@@ -137,7 +137,7 @@ public:
 class IIO_API fmcomms2_sink_f32c : virtual public gr::hier_block2
 {
 public:
-    typedef boost::shared_ptr<fmcomms2_sink_f32c> sptr;
+  typedef std::shared_ptr<fmcomms2_sink_f32c> sptr;
 
     /*!
      * \brief Return a shared_ptr to a new instance of iio::fmcomms2_sink.

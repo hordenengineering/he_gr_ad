@@ -36,7 +36,7 @@ namespace iio {
 class IIO_API pluto_sink : virtual public gr::hier_block2
 {
 public:
-    typedef boost::shared_ptr<pluto_sink> sptr;
+    typedef std::shared_ptr<pluto_sink> sptr;
 
     /*!
      * \brief Return a shared_ptr to a new instance of iio::fmcomms2_sink.

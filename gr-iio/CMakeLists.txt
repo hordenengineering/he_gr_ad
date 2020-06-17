@@ -24,13 +24,6 @@ include(GrBoost)
 
 find_package(IIO)
 
-set(GR_IIO_DEPENDENCIES
-  Boost_FOUND
-  ENABLE_GNURADIO_RUNTIME
-  ENABLE_GR_BLOCKS
-  ENABLE_VOLK
-  IIO_FOUND)
-
 option(LIBAD9361_ENABLE "Build with libad9361-iio" ON)
 if (LIBAD9361_ENABLE)
   find_package(AD9361)
@@ -41,7 +34,12 @@ endif()
 # Register component
 ########################################################################
 include(GrComponent)
-GR_REGISTER_COMPONENT("gr-iio" ENABLE_GR_IIO ${GR_IIO_DEPENDENCIES})
+GR_REGISTER_COMPONENT("gr-iio" ENABLE_GR_IIO
+  Boost_FOUND
+  ENABLE_GNURADIO_RUNTIME
+  ENABLE_GR_BLOCKS
+  IIO_FOUND
+)
 
 SET(GR_PKG_IIO_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/iio)
 
