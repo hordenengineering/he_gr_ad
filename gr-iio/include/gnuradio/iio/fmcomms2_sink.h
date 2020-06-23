@@ -137,7 +137,7 @@ public:
 class IIO_API fmcomms2_sink_f32c : virtual public gr::hier_block2
 {
 public:
-  typedef std::shared_ptr<fmcomms2_sink_f32c> sptr;
+    typedef std::shared_ptr<fmcomms2_sink_f32c> sptr;
 
     /*!
      * \brief Return a shared_ptr to a new instance of iio::fmcomms2_sink.

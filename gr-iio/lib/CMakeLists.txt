@@ -21,20 +21,12 @@
 # Setup library
 ########################################################################
 add_library(gnuradio-iio
-  device_source_impl.cc
-  device_sink_impl.cc
-  attr_source_impl.cc
   attr_sink_impl.cc
+  attr_source_impl.cc
   attr_updater_impl.cc
   dds_control.cc
-)
-
-target_link_libraries(gnuradio-iio PUBLIC
-  gnuradio-runtime
-  ${IIO_LIBRARIES}
-  ${GR_VOLK_LIB}
-  PRIVATE
-  gnuradio-blocks
+  device_sink_impl.cc
+  device_source_impl.cc
 )
 
 target_include_directories(gnuradio-iio
@@ -43,17 +35,25 @@ target_include_directories(gnuradio-iio
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
   )
 
+target_link_libraries(gnuradio-iio PUBLIC
+  gnuradio-runtime
+  ${LIBIIO_LIBRARIES}
+  ${GR_VOLK_LIB}
+  PRIVATE
+  gnuradio-blocks
+)
+
 if(LIBAD9361_FOUND)
   target_sources(gnuradio-iio PRIVATE
-    fmcomms2_source_impl.cc
     fmcomms2_sink_impl.cc
-    fmcomms5_source_impl.cc
+    fmcomms2_source_impl.cc
     fmcomms5_sink_impl.cc
-    pluto_source_impl.cc
+    fmcomms5_source_impl.cc
     pluto_sink_impl.cc
+    pluto_source_impl.cc
   )
-  target_link_libraries(gnuradio-iio PUBLIC ${AD9361_LIBRARIES})
-  target_include_directories(gnuradio-iio PUBLIC ${AD9361_INCLUDE_DIRS})
+  target_include_directories(gnuradio-iio PUBLIC ${LIBAD9361_INCLUDE_DIRS})
+  target_link_libraries(gnuradio-iio PUBLIC ${LIBAD9361_LIBRARIES})
 endif(LIBAD9361_FOUND)
 
 #Add Windows DLL resource file if using MSVC

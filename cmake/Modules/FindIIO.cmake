@@ -1,11 +1,44 @@
-# - Config file for the libiio package
-# It defines the following variables
-#  IIO_INCLUDE_DIRS - include directories for FooBar
-#  IIO_LIBRARIES    - libraries to link against
-#  IIO_FOUND     - system has libad9361 installed
+# - Find libiio
+# Find the native libiio includes and library
+#
+#  LIBIIO_FOUND       - True if libiio is found.
+#  LIBIIO_INCLUDE_DIR - Where to find ad9361.h.
+#  LIBIIO_LIBRARIES   - List of libraries when using libiio.
 
-find_library(IIO_LIBRARIES iio)
-find_path(IIO_INCLUDE_DIRS iio.h)
-if(IIO_LIBRARIES)
-	set(IIO_FOUND TRUE)
-endif(IIO_LIBRARIES)
+set(LIBIIO_NAMES iio)
+find_library(LIBIIO_LIBRARY
+  NAMES ${LIBIIO_NAMES}
+  PATHS /usr/lib
+        /usr/lib64
+        /usr/local/lib
+        /usr/local/lib64
+        /opt/local/lib
+        /opt/local/lib64
+)
+
+find_path(LIBIIO_INCLUDE_DIR iio.h
+  /usr/include
+  /usr/local/include
+  /opt/local/include
+)
+
+if (LIBIIO_INCLUDE_DIR AND LIBIIO_LIBRARY)
+  set(LIBIIO_FOUND TRUE)
+  set(LIBIIO_INCLUDE_DIRS ${LIBIIO_INCLUDE_DIR})
+  set(LIBIIO_LIBRARIES ${LIBIIO_LIBRARY})
+else ()
+  set(LIBIIO_FOUND FALSE)
+  set(LIBIIO_INCLUDE_DIR "")
+  set(LIBIIO_INCLUDE_DIRS "")
+  set(LIBIIO_LIBRARY "")
+  set(LIBIIO_LIBRARIES "")
+endif ()
+
+if (LIBIIO_FOUND)
+  message(STATUS "Found libiio library: ${LIBIIO_LIBRARIES}")
+endif ()
+
+mark_as_advanced(
+  LIBIIO_INCLUDE_DIRS
+  LIBIIO_LIBRARIES
+)
